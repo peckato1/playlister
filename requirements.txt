@@ -1,0 +1,12 @@
+certifi==2024.12.14
+charset-normalizer==3.4.1
+idna==3.10
+iniconfig==2.0.0
+loguru==0.7.3
+packaging==24.2
+peewee==3.17.8
+pluggy==1.5.0
+psycopg2==2.9.10
+pytest==8.3.4
+requests==2.32.3
+urllib3==2.3.0
