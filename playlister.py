@@ -18,7 +18,7 @@ def param(arg, env_var, default=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Playlister daemon')
-    parser.add_argument('--log-level', default='info', help='Log level', choices=['trace', 'debug', 'info', 'warning', 'error', 'critical'])
+    parser.add_argument('--log-level', help='Log level, info by default', choices=['trace', 'debug', 'info', 'warning', 'error', 'critical'])
     parser.add_argument('--db-host', help='Database host')
     parser.add_argument('--db-port', type=int, help='Database port', default=5432)
     parser.add_argument('--db-user', help='Database user')
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     loguru.logger.remove()
-    loguru.logger.add(sys.stderr, level=args.log_level.upper())
+    loguru.logger.add(sys.stderr, level=param(args.log_level, 'PLAYLISTER_LOG_LEVEL', 'info').upper())
 
     sys.exit(playlister.PlaylisterDaemon(
         database_host=param(args.db_host, 'PLAYLISTER_DB_HOST'),
