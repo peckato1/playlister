@@ -6,25 +6,34 @@ import sys
 import playlister
 
 
-def env(key, default=None):
-    val = os.environ.get(key)
+def param(arg, env_var, default=None):
+    if arg is not None:
+        return arg
+
+    val = os.environ.get(env_var)
     if val is None and default is None:
-        raise ValueError(f'Environment variable {key} not set')
+        raise ValueError(f"Neither argument not environment variable '{env_var}' set and no default provided")
     return val if val != None else default
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Playlister daemon')
-    parser.add_argument('--log-level', default='INFO', help='Log level', choices=['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
+    parser.add_argument('--log-level', default='info', help='Log level', choices=['trace', 'debug', 'info', 'warning', 'error', 'critical'])
+    parser.add_argument('--db-host', help='Database host')
+    parser.add_argument('--db-port', type=int, help='Database port', default=5432)
+    parser.add_argument('--db-user', help='Database user')
+    parser.add_argument('--db-password', help='Database password')
+    parser.add_argument('--db-name', help='Database name')
+
     args = parser.parse_args()
 
     loguru.logger.remove()
-    loguru.logger.add(sys.stderr, level=args.log_level)
+    loguru.logger.add(sys.stderr, level=args.log_level.upper())
 
     sys.exit(playlister.PlaylisterDaemon(
-        database_host=env('DATABASE_HOST', 'localhost'),
-        database_port=env('DATABASE_PORT', 5432),
-        database_user=env('DATABASE_USER'),
-        database_password=env('DATABASE_PASSWORD'),
-        database_name=env('DATABASE_NAME')
+        database_host=param(args.db_host, 'PLAYLISTER_DB_HOST'),
+        database_port=param(args.db_port, 'PLAYLISTER_DB_PORT', 5432),
+        database_user=param(args.db_user, 'PLAYLISTER_DB_USER'),
+        database_password=param(args.db_password, 'PLAYLISTER_DB_PASSWORD'),
+        database_name=param(args.db_name, 'PLAYLISTER_DB_NAME')
         ).run())
