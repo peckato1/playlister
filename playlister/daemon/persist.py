@@ -1,6 +1,6 @@
 import datetime
 from loguru import logger
-from playlister import model, data
+from .. import model
 
 
 def createMetadata(metadata_cls, instance: model.BaseModel, meta: dict):
@@ -23,7 +23,7 @@ class DatabaseWriter:
         self.db = db
         self.station = station
 
-    def write(self, sync_time: datetime.datetime, tracks: list[data.Played]):
+    def write(self, sync_time: datetime.datetime, tracks):
         with self.db.atomic():
             for entry in tracks:
                 self._persist_entry(entry, sync_time)

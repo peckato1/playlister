@@ -3,7 +3,7 @@ import requests
 
 from ._loader import Loader
 from playlister.model import Station
-from playlister.data import Played
+from playlister.daemon.data import Played
 
 
 class CzechRadioLoader(Loader):

@@ -1,7 +1,8 @@
 import datetime
 
-from playlister import model, data
-from playlister.persist import DatabaseWriter
+import playlister.model as model
+import playlister.daemon.data as data
+from playlister.daemon.persist import DatabaseWriter
 from tests.DBTest import DBTest
 
 

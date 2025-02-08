@@ -7,7 +7,8 @@ import re
 import unittest
 import unittest.mock
 
-from playlister import loaders, data
+import playlister.daemon.loaders as loaders
+import playlister.daemon.data as data
 
 
 def mock_requests_get(url, *args, **kwargs):

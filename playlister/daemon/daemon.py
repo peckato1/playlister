@@ -5,8 +5,9 @@ import sched
 import time
 import threading
 
-from playlister import model, loaders
+from .loaders import Loader
 from .persist import DatabaseWriter
+from .. import model
 
 
 class PlaylisterDaemon:
@@ -27,7 +28,7 @@ class PlaylisterDaemon:
         loader_db = station.loader
         params = dict(map(lambda p: (p.key, p.value), loader_db.params))
 
-        loader = loaders.Loader.create(loader_db.class_name, station, loader_db.interval, **params)
+        loader = Loader.create(loader_db.class_name, station, loader_db.interval, **params)
         logger.info(f'Initialized loader {loader.__class__.__name__} for station {station.name}, interval {loader.interval}')
         return loader
 
@@ -44,7 +45,7 @@ class PlaylisterDaemon:
         self.thread.join()
         return 0
 
-    def _schedule_next(self, loader: loaders.Loader, sync_time: datetime.datetime):
+    def _schedule_next(self, loader: Loader, sync_time: datetime.datetime):
         if loader.interval is None:
             interval = self.DEFAULT_FETCH_INTERVAL
         else:
@@ -54,7 +55,7 @@ class PlaylisterDaemon:
         logger.debug(f'Scheduling next fetch for {loader.station.name} at {next_sync_time} ({interval} from now)')
         self.scheduler.enter(interval.total_seconds(), 0, self._loader_fetch, (loader,))
 
-    def _loader_fetch(self, loader: loaders.Loader):
+    def _loader_fetch(self, loader: Loader):
         sync_time = datetime.datetime.now()
 
         try:
@@ -62,7 +63,7 @@ class PlaylisterDaemon:
             logger.debug(f'Fetched {len(tracks)} tracks from {loader.station.name}')
             DatabaseWriter(self.db, loader.station).write(sync_time, tracks)
             self._schedule_next(loader, sync_time)
-        except loaders.Loader.LoaderException as e:
+        except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
             self._schedule_next(loader, sync_time)
         except Exception as e:

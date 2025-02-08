@@ -1,7 +1,7 @@
 import abc
 import datetime
 
-from playlister.data import Played
+from playlister.daemon.data import Played
 from playlister import model
 
 
