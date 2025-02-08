@@ -15,7 +15,7 @@ def createMetadata(metadata_cls, instance: model.BaseModel, meta: dict):
         'key': key,
         'value': value,
         fk_column: instance.id
-    } for key, value in meta.items()]).on_conflict_ignore().execute() # TODO Really ignore? At least warn when conflicts (fk, key) -> value happen
+    } for key, value in meta.items()]).on_conflict_ignore().execute()  # TODO Really ignore? At least warn when conflicts (fk, key) -> value happen
 
 
 class DatabaseWriter:
@@ -46,7 +46,7 @@ class DatabaseWriter:
             if len(resultset) == 0:
                 raise model.Interpret.DoesNotExist
             if len(resultset) > 1:
-                raise RuntimeError(f"Multiple interprets found")
+                raise RuntimeError("Multiple interprets found")
 
             m = resultset[0]
         except model.Interpret.DoesNotExist:
@@ -69,7 +69,7 @@ class DatabaseWriter:
             if len(resultset) == 0:
                 raise model.Track.DoesNotExist
             if len(resultset) > 1:
-                raise RuntimeError(f"Multiple tracks found")
+                raise RuntimeError("Multiple tracks found")
 
             m = resultset[0]
         except model.Track.DoesNotExist:

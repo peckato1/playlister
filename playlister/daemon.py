@@ -2,7 +2,6 @@ import datetime
 from loguru import logger
 import peewee
 import sched
-import sys
 import time
 import threading
 

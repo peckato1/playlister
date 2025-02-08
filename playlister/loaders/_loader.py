@@ -1,9 +1,9 @@
 import abc
 import datetime
-from loguru import logger
 
 from playlister.data import Played
 from playlister import model
+
 
 class Loader(metaclass=abc.ABCMeta):
     interval: datetime.timedelta | None = None

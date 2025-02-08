@@ -5,6 +5,7 @@ from ._loader import Loader
 from playlister.model import Station
 from playlister.data import Played
 
+
 class CzechRadioLoader(Loader):
     URL_TEMPLATE = 'https://api.rozhlas.cz/data/v2/playlist/day/{:04d}/{:02d}/{:02d}/{}.json'
 
