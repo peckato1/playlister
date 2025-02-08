@@ -1,0 +1,43 @@
+volumes:
+  pgdata:
+
+networks:
+  backend:
+
+services:
+  postgres:
+    image: postgres:17.2
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh
+    networks:
+      - backend
+    ports:
+      - 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: playlister
+      POSTGRES_PLAYLISTER_USER: playlister
+      # POSTGRES_PASSWORD: <secret>
+      # POSTGRES_PLAYLISTER_PASSWORD: <secret>
+    env_file:
+      - .secrets.env
+
+  playlister:
+    build: .
+    restart: always
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    environment:
+      PLAYLISTER_DB_HOST: postgres
+      PLAYLISTER_DB_PORT: 5432
+      PLAYLISTER_DB_USER: playlister
+      PLAYLISTER_DB_NAME: playlister
+      PLAYLISTER_LOG_LEVEL: debug
+      # PLAYLISTER_DB_PASSWORD: <secret>
+    env_file:
+      - .secrets.env
