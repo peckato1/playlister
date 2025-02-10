@@ -25,10 +25,10 @@ class PlaylisterDaemon:
 
     @classmethod
     def _create_loader(cls, station: model.Station):
-        loader_db = station.loader
-        params = dict(map(lambda p: (p.key, p.value), loader_db.params))
+        params = model.LoaderParams.select().where(model.LoaderParams.station == station)
+        params = dict(map(lambda p: (p.key, p.value), list(params)))
 
-        loader = Loader.create(loader_db.class_name, station, loader_db.interval, **params)
+        loader = Loader.create(station.loader_class, station, station.loader_interval, **params)
         logger.info(f'Initialized loader {loader.__class__.__name__} for station {station.name}, interval {loader.interval}')
         return loader
 

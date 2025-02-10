@@ -2,7 +2,7 @@ import peewee
 import unittest
 
 from playlister import model
-from playlister.model import Station, Loader
+from playlister.model import Station
 
 
 class DBTest(unittest.TestCase):
@@ -20,9 +20,8 @@ class DBTest(unittest.TestCase):
             self.db.commit()
             model.bind_models(self.db)
 
-            loader = Loader.create(class_name="loader1")
-            self.station1 = Station.create(name="station1", loader=loader)
-            self.station2 = Station.create(name="station2", loader=loader)
+            self.station1 = Station.create(name="station1", loader_class="loader1")
+            self.station2 = Station.create(name="station2", loader_class="loader1")
 
     def tearDown(self):
         with self.db:

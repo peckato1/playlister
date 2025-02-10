@@ -7,28 +7,23 @@ class BaseModel(peewee.Model):
         schema = 'playlister'
 
 
-class Loader(BaseModel):
-    loader_id = peewee.AutoField(primary_key=True)
-    class_name = peewee.CharField()
-    interval = playhouse.postgres_ext.IntervalField(null=True)  # Default daemon interval if not set by loader
+class Station(BaseModel):
+    id = peewee.AutoField(primary_key=True)
+    name = peewee.CharField(unique=True)
+    loader_class = peewee.CharField()
+    loader_interval = playhouse.postgres_ext.IntervalField(null=True)  # Default daemon interval if not set by loader
 
 
 class LoaderParams(BaseModel):
-    loader = peewee.ForeignKeyField(Loader, backref='params', column_name='loader_id')
+    station = peewee.ForeignKeyField(Station, backref='loader_params', column_name='station_id')
     key = peewee.CharField()
     value = peewee.CharField()
 
     class Meta:
         primary_key = False
         indexes = (
-            (('loader', 'key'), True),
+            (('station', 'key'), True),
         )
-
-
-class Station(BaseModel):
-    id = peewee.AutoField(primary_key=True)
-    name = peewee.CharField(unique=True)
-    loader = peewee.ForeignKeyField(Loader, backref='stations', column_name='loader_id')
 
 
 class Interpret(BaseModel):
@@ -77,5 +72,5 @@ class TrackPlayed(BaseModel):
 
 
 def bind_models(database):
-    database.bind([Station, Loader, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
-    database.create_tables([Station, Loader, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
+    database.bind([Station, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
+    database.create_tables([Station, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
