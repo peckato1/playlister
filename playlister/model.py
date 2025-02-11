@@ -1,8 +1,9 @@
 import peewee
+import peewee_async
 import playhouse.postgres_ext
 
 
-class BaseModel(peewee.Model):
+class BaseModel(peewee_async.AioModel):
     class Meta:
         schema = 'playlister'
 

@@ -10,3 +10,4 @@ psycopg2==2.9.10
 pytest==8.3.4
 requests==2.32.3
 urllib3==2.3.0
+peewee_async==1.0.0
