@@ -4,9 +4,13 @@ set -e
 psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" <<-EOSQL
 	CREATE USER ${POSTGRES_PLAYLISTER_USER} WITH PASSWORD '${POSTGRES_PLAYLISTER_PASSWORD}';
 	GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DB} TO ${POSTGRES_PLAYLISTER_USER};
-    \connect ${POSTGRES_DB} ${POSTGRES_PLAYLISTER_USER};
-    CREATE SCHEMA "playlister";
+EOSQL
 
+psql -v ON_ERROR_STOP=1 --username "${POSTGRES_PLAYLISTER_USER}" --dbname "${POSTGRES_DB}" <<-EOSQL
+    CREATE SCHEMA "playlister";
+EOSQL
+
+psql -v ON_ERROR_STOP=1 --username "${POSTGRES_PLAYLISTER_USER}" --dbname "${POSTGRES_DB}" <<-EOSQL
     CREATE TABLE playlister.station (
         id serial4 NOT NULL,
         "name" varchar(255) NOT NULL,
@@ -127,5 +131,11 @@ psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" 
         (24, 'stationname', 'sever'),
         (25, 'stationname', 'vysocina'),
         (26, 'stationname', 'zlin');
+EOSQL
 
+psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" <<-EOSQL
+	CREATE USER ${POSTGRES_READONLY_USER} WITH PASSWORD '${POSTGRES_READONLY_PASSWORD}';
+    GRANT CONNECT ON DATABASE ${POSTGRES_DB} TO ${POSTGRES_READONLY_USER};
+    GRANT USAGE ON SCHEMA playlister TO ${POSTGRES_READONLY_USER};
+    GRANT SELECT ON ALL TABLES IN SCHEMA playlister TO ${POSTGRES_READONLY_USER};
 EOSQL
