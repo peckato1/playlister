@@ -38,6 +38,8 @@ jobs:
             image: ghcr.io/peckato1/playlister/api
           - dockerfile: ./Dockerfile.daemon
             image: ghcr.io/peckato1/playlister/daemon
+          - dockerfile: ./Dockerfile.frontend
+            image: ghcr.io/peckato1/playlister/frontend
 
     steps:
       - name: Checkout repository
