@@ -36,6 +36,11 @@ def filter_stations(stationIdFilter: StationIdFilter, query: peewee.ModelSelect)
     return query
 
 
+@router.get("/played")
+async def played(p: Pagination) -> typing.List[apimodel.TrackPlayed]:
+    return paginate(p, m.TrackPlayed.select().order_by(m.TrackPlayed.start.desc()))
+
+
 @router.get("/stations")
 async def stations() -> typing.List[apimodel.Station]:
     return list(m.Station.select())
