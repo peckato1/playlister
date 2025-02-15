@@ -24,10 +24,6 @@ export default function StationDataGrid({ data }: { data: Station[] }) {
           return renderedCellValue || "N/A";
         }
       },
-      {
-        accessorKey: 'station.loader_interval',
-        header: 'Last track time',
-      },
     ],
     [],
   );
