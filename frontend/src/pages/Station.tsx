@@ -1,6 +1,6 @@
 import { useParams, Outlet } from 'react-router';
 import Loading from '../components/Loading';
-import DataGrid from '../components/datagrid/TrackPlayedDataGrid';
+import DataGridFactory from '../components/datagrid/DataGridFactory';
 import Typography from '@mui/material/Typography';
 import useApi from '../hooks/useApiQuery';
 
@@ -18,7 +18,7 @@ export default function Page() {
       </Typography>
 
       <Outlet />
-      <DataGrid data={queryPlayed.data} />
+      <DataGridFactory type="trackplayed" data={queryPlayed.data} />
     </>
   );
 }

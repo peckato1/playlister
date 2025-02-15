@@ -1,8 +1,7 @@
-import { Station } from '../model';
 import Loading from '../components/Loading';
 import useApi from '../hooks/useApiQuery';
 import Typography from '@mui/material/Typography';
-import DataGrid from '../components/datagrid/StationDataGrid';
+import DataGridFactory from '../components/datagrid/DataGridFactory';
 
 export default function Page() {
   const { isLoading, data } = useApi({ resource: '/stations' });
@@ -15,7 +14,7 @@ export default function Page() {
         Stations
       </Typography>
 
-      <DataGrid data={data as Station[]} />
+      <DataGridFactory type="station" data={data} />
     </>
   );
 }
