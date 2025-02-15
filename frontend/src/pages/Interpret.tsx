@@ -6,20 +6,19 @@ import useApi from '../hooks/useApiQuery';
 
 export default function Page() {
   const { interpretId } = useParams();
-  const { isLoading, data } = useApi({ resource: `interprets/${interpretId}` });
-  const { isLoading: isLoading2, data: data2 } = useApi({ resource: `interprets/${interpretId}/played` });
+  const queryInterpret = useApi({ resource: `interprets/${interpretId}` });
+  const queryPlayed = useApi({ resource: `interprets/${interpretId}/played` });
 
-  if (isLoading) return <Loading />
-  if (isLoading2) return <Loading />
+  if (queryInterpret.isLoading || queryPlayed.isLoading) return <Loading />
 
   return (
     <>
       <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
-        {data.name}
+        {queryInterpret.data.name}
       </Typography>
 
       <Outlet />
-      <DataGrid data={data2} />
+      <DataGrid data={queryPlayed.data.name} />
     </>
   );
 }
