@@ -1,15 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
 import Loading from '../components/Loading';
 import DataGrid from '../components/datagrid/TrackPlayedDataGrid';
 import { TrackPlayed } from '../model';
-import { env } from '../config';
 import Typography from '@mui/material/Typography';
+import useApi from '../hooks/useApiQuery';
 
 export default function Page() {
-  const { isLoading, data } = useQuery({
-    queryKey: ['played'],
-    queryFn: () => fetch(`${env('VITE_API_BASEURL')}/v1/played`).then((res) => res.json()),
-  });
+  const { isLoading, data } = useApi({
+    resource: '/played',
+  })
 
   if (isLoading) return <Loading />
 

@@ -1,3 +1,5 @@
-export function env(key: string): string | undefined {
-  return import.meta.env[key];
-}
+import Axios from "axios";
+
+export const axios = Axios.create({
+  baseURL: import.meta.env.VITE_API_BASEURL + "/v1/",
+})
