@@ -10,6 +10,7 @@ import InterpretDashboard from './pages/InterpretDashboard';
 import InterpretTrackList from './pages/InterpretTrackList';
 import InterpretPlayed from './pages/InterpretPlayed';
 import Track from './pages/Track';
+import TrackDashboard from './pages/TrackDashboard';
 import About from './pages/About';
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
                 </Route>
               </Route>
               <Route path="/tracks">
-                <Route index />
+                <Route index element={<TrackDashboard />} />
                 <Route path=":trackId">
                   <Route index element={<Track />} />
                 </Route>
