@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import StationDashboard from './pages/StationDashboard';
 import Station from './pages/Station';
 import Interpret from './pages/Interpret';
+import InterpretTrackList from './pages/InterpretTrackList';
+import InterpretPlayed from './pages/InterpretPlayed';
 import Track from './pages/Track';
 import About from './pages/About';
 
@@ -28,8 +30,9 @@ function App() {
               </Route>
               <Route path="/interprets">
                 <Route index />
-                <Route path=":interpretId">
-                  <Route index element={<Interpret />} />
+                <Route path=":interpretId" element={<Interpret />}>
+                  <Route index element={<InterpretPlayed />} />
+                  <Route path="tracks" element={<InterpretTrackList />} />
                 </Route>
               </Route>
               <Route path="/tracks">

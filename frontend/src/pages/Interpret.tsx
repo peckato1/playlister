@@ -2,14 +2,13 @@ import { useParams, Outlet } from 'react-router';
 import Loading from '../components/Loading';
 import Typography from '@mui/material/Typography';
 import useApi from '../hooks/useApiQuery';
-import DataGridFactory from '../components/datagrid/DataGridFactory';
+import NavTabs from '../components/NavTabs';
 
 export default function Page() {
   const { interpretId } = useParams();
   const queryInterpret = useApi({ resource: `interprets/${interpretId}` });
-  const queryPlayed = useApi({ resource: `interprets/${interpretId}/played` });
 
-  if (queryInterpret.isLoading || queryPlayed.isLoading) return <Loading />
+  if (queryInterpret.isLoading) return <Loading />
 
   return (
     <>
@@ -17,8 +16,9 @@ export default function Page() {
         {queryInterpret.data.name}
       </Typography>
 
-      <Outlet />
-      <DataGridFactory type="trackplayed" data={queryPlayed.data} />
+      <NavTabs tabs={[{ label: 'Last played', href: '.' }, { label: 'Track list', href: 'tracks' }]} />
+
+      <Outlet/>
     </>
   );
 }

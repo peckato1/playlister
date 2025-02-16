@@ -1,7 +1,8 @@
 import StationDataGrid from './StationDataGrid'
+import TrackDataGrid from './TrackDataGrid'
 import TrackPlayedDataGrid from './TrackPlayedDataGrid'
 
-import { Station, TrackPlayed } from '../../model'
+import { Station, Track, TrackPlayed } from '../../model'
 
 export type DataGridType = 'station' | 'interpret' | 'track' | 'trackplayed'
 
@@ -9,6 +10,8 @@ export default function DataGridFactory({ type, data } : { type: DataGridType, d
   switch (type) {
     case 'station':
       return <StationDataGrid data={data as Station[]} />
+    case 'track':
+      return <TrackDataGrid data={data as Track[]} />
     case 'trackplayed':
       return <TrackPlayedDataGrid data={data as TrackPlayed[]} />
     default:
