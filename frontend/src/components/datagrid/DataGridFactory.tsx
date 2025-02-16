@@ -1,3 +1,4 @@
+import InterpretDataGrid from './InterpretDataGrid'
 import StationDataGrid from './StationDataGrid'
 import TrackDataGrid from './TrackDataGrid'
 import TrackPlayedDataGrid from './TrackPlayedDataGrid'
@@ -10,6 +11,8 @@ export default function DataGridFactory({ type, data } : { type: DataGridType, d
   switch (type) {
     case 'station':
       return <StationDataGrid data={data as Station[]} />
+    case 'interpret':
+      return <InterpretDataGrid data={data as Track[]} />
     case 'track':
       return <TrackDataGrid data={data as Track[]} />
     case 'trackplayed':

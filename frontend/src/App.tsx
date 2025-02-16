@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import StationDashboard from './pages/StationDashboard';
 import Station from './pages/Station';
 import Interpret from './pages/Interpret';
+import InterpretDashboard from './pages/InterpretDashboard';
 import InterpretTrackList from './pages/InterpretTrackList';
 import InterpretPlayed from './pages/InterpretPlayed';
 import Track from './pages/Track';
@@ -29,7 +30,7 @@ function App() {
                 </Route>
               </Route>
               <Route path="/interprets">
-                <Route index />
+                <Route index element={<InterpretDashboard />} />
                 <Route path=":interpretId" element={<Interpret />}>
                   <Route index element={<InterpretPlayed />} />
                   <Route path="tracks" element={<InterpretTrackList />} />
