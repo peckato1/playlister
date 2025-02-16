@@ -1,8 +1,8 @@
 import { useParams, Outlet } from 'react-router';
 import useApi from '../hooks/useApiQuery';
 import Loading from '../components/Loading';
-import Typography from '@mui/material/Typography';
 import NavTabs from '../components/NavTabs';
+import TitleAndServiceLinks from '../components/TitleAndServiceLinks';
 
 export default function Page() {
   const { trackId } = useParams();
@@ -12,9 +12,7 @@ export default function Page() {
 
   return (
     <>
-      <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
-        {query.data.interpret.name} - {query.data.name}
-      </Typography>
+      <TitleAndServiceLinks interpret={query.data.interpret.name} track={query.data.name} />
 
       <NavTabs tabs={[{ label: 'Last played', href: '.' }]} />
 

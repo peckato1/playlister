@@ -1,8 +1,8 @@
 import { useParams, Outlet } from 'react-router';
 import Loading from '../components/Loading';
-import Typography from '@mui/material/Typography';
 import useApi from '../hooks/useApiQuery';
 import NavTabs from '../components/NavTabs';
+import TitleAndServiceLinks from '../components/TitleAndServiceLinks';
 
 export default function Page() {
   const { interpretId } = useParams();
@@ -12,9 +12,7 @@ export default function Page() {
 
   return (
     <>
-      <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
-        {queryInterpret.data.name}
-      </Typography>
+      <TitleAndServiceLinks interpret={queryInterpret.data.name} />
 
       <NavTabs tabs={[{ label: 'Last played', href: '.' }, { label: 'Track list', href: 'tracks' }]} />
 
