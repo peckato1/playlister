@@ -1,24 +1,24 @@
 import { useParams, Outlet } from 'react-router';
 import useApi from '../hooks/useApiQuery';
 import Loading from '../components/Loading';
-import DataGridFactory from '../components/datagrid/DataGridFactory';
 import Typography from '@mui/material/Typography';
+import NavTabs from '../components/NavTabs';
 
 export default function Page() {
   const { trackId } = useParams();
-  const queryTrack = useApi({ resource: `tracks/${trackId}` });
-  const queryPlayed = useApi({ resource: `tracks/${trackId}/played` });
+  const query = useApi({ resource: `tracks/${trackId}` });
 
-  if (queryTrack.isLoading || queryPlayed.isLoading) return <Loading />
+  if (query.isLoading) return <Loading />
 
   return (
     <>
       <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
-        {queryTrack.data.interpret.name} - {queryTrack.data.name}
+        {query.data.interpret.name} - {query.data.name}
       </Typography>
 
+      <NavTabs tabs={[{ label: 'Last played', href: '.' }]} />
+
       <Outlet />
-      <DataGridFactory type="trackplayed" data={queryPlayed.data} />
     </>
   );
 }

@@ -11,6 +11,7 @@ import InterpretTrackList from './pages/InterpretTrackList';
 import InterpretPlayed from './pages/InterpretPlayed';
 import Track from './pages/Track';
 import TrackDashboard from './pages/TrackDashboard';
+import TrackPlayed from './pages/TrackPlayed';
 import About from './pages/About';
 
 function App() {
@@ -39,8 +40,8 @@ function App() {
               </Route>
               <Route path="/tracks">
                 <Route index element={<TrackDashboard />} />
-                <Route path=":trackId">
-                  <Route index element={<Track />} />
+                <Route path=":trackId" element={<Track />}>
+                  <Route index element={<TrackPlayed />} />
                 </Route>
               </Route>
               <Route path="/about" element={<About />} />
