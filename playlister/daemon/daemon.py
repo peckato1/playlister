@@ -11,7 +11,7 @@ from .. import model
 
 
 class PlaylisterDaemon:
-    DEFAULT_FETCH_INTERVAL = datetime.timedelta(minutes=1)
+    DEFAULT_FETCH_INTERVAL = datetime.timedelta(minutes=5)
 
     def __init__(self, database_host, database_port, database_user, database_password, database_name):
         self.db = peewee.PostgresqlDatabase(
