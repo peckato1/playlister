@@ -9,8 +9,14 @@ interface Props {
 
 export default function TitleAndServiceLinks(props: Props) {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: {'xs': 'column', 'md': 'row'} }}>
-      <Typography variant="h4" component="h2" sx={{ me: 3, mr: 3 }}>
+    <Box sx={{
+      display: 'flex',
+      flexDirection: {'xs': 'column', 'md': 'row'},
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      mb: 3,
+    }}>
+      <Typography variant="h4" component="h2" sx={{ mb: 2, mr: 3 }}>
         {props.interpret} {props.track ? `- ${props.track}` : ''}
       </Typography>
 
