@@ -87,6 +87,7 @@ async def track(track_id: int) -> apimodel.Track:
     return m.Track.select(m.Track, m.Interpret.id.alias("interpret_id"), m.Interpret.name.alias("interpret_name"))\
             .join(m.Interpret).objects().where(m.Track.id == track_id).objects().get()
 
+
 @router.get("/tracks/{track_id}/played")
 async def track_played(track_id: int, p: Pagination, station_filter: StationIdFilter) -> typing.List[apimodel.TrackPlayed]:
     q = m.TrackPlayed.select().where(m.TrackPlayed.track == track_id)
