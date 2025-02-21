@@ -3,6 +3,8 @@ import pydantic
 
 
 class Station(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(ser_json_timedelta='float')
+
     id: int
     name: str
     loader_interval: datetime.timedelta | None
