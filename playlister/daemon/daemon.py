@@ -62,10 +62,10 @@ class PlaylisterDaemon:
             tracks = loader.fetch(sync_time)
             logger.debug(f'Fetched {len(tracks)} tracks from {loader.station.name}')
             DatabaseWriter(self.db, loader.station).write(sync_time, tracks)
-            self._schedule_next(loader, sync_time)
         except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
             self._schedule_next(loader, sync_time)
         except Exception as e:
             logger.exception(f'Unexpected error while fetching data from {loader.station.name}: {e}')
-            logger.error(f'Discontinued scheduling loader {loader.station.name}')
+
+        self._schedule_next(loader, sync_time)
