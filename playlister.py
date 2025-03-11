@@ -7,13 +7,14 @@ import playlister
 
 
 def param(arg, env_var, default=None):
+    if val := os.environ.get(env_var):
+        return val
     if arg is not None:
         return arg
+    if default is not None:
+        return default
 
-    val = os.environ.get(env_var)
-    if val is None and default is None:
-        raise ValueError(f"Neither argument not environment variable '{env_var}' set and no default provided")
-    return val if val != None else default
+    raise ValueError(f"Neither argument not environment variable '{env_var}' set and no default provided")
 
 
 if __name__ == '__main__':
