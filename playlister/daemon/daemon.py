@@ -54,11 +54,13 @@ class PlaylisterDaemon:
         logger.debug(f'Scheduling next fetch for {loader.station.name} at {next_sync_time} ({interval} from now)')
         self.scheduler.enter(interval.total_seconds(), 0, self._loader_fetch, (loader,))
 
-    def _loader_fetch(self, loader: Loader):
+    def _loader_fetch(self, loader: Loader, date: datetime.date | None = None):
         now = datetime.datetime.now()
 
         try:
-            loader.fetch_and_persist(self.db, now.date())
+            fetch_date = date if date is not None else now.date()
+            logger.debug(f'Fetching data from {loader.station.name}, {fetch_date}')
+            loader.fetch_and_persist(self.db, fetch_date)
         except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
         except Exception as e:
