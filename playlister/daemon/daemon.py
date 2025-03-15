@@ -20,7 +20,10 @@ class PlaylisterDaemon:
             host=database_host,
             port=database_port)
         self.scheduler = sched.scheduler(time.time, time.sleep)
-        self.loaders = list()
+
+        with self.db:
+            model.bind_models(self.db)
+            self.loaders = list(map(lambda s: self._create_loader(s), model.Station.select().execute()))
 
     @classmethod
     def _create_loader(cls, station: model.Station):
@@ -32,10 +35,6 @@ class PlaylisterDaemon:
         return loader
 
     def run(self):
-        with self.db:
-            model.bind_models(self.db)
-            self.loaders = list(map(lambda s: self._create_loader(s), model.Station.select().execute()))
-
         for loader in self.loaders:
             self.scheduler.enter(1, 0, self._loader_fetch, (loader,))
 
