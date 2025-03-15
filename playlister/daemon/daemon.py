@@ -64,7 +64,6 @@ class PlaylisterDaemon:
             DatabaseWriter(self.db, loader.station).write(sync_time, tracks)
         except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
-            self._schedule_next(loader, sync_time)
         except Exception as e:
             logger.exception(f'Unexpected error while fetching data from {loader.station.name}: {e}')
 
