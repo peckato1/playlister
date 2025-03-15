@@ -19,6 +19,7 @@ class DBTest(unittest.TestCase):
             self.db.execute_sql('CREATE SCHEMA playlister')
             self.db.commit()
             model.bind_models(self.db)
+            model._create_tables(self.db)
 
             self.station1 = Station.create(name="station1", loader_class="loader1")
             self.station2 = Station.create(name="station2", loader_class="loader1")

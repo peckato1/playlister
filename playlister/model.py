@@ -74,3 +74,6 @@ class TrackPlayed(BaseModel):
 
 def bind_models(database):
     database.bind([Station, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
+
+def _create_tables(database):
+    database.create_tables([Station, LoaderParams, Interpret, InterpretMetadata, Track, TrackMetadata, TrackPlayed])
