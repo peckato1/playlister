@@ -1,7 +1,10 @@
 import abc
 import datetime
+from loguru import logger
+import peewee
 
 from playlister.daemon.data import Played
+from playlister.daemon.persist import DatabaseWriter
 from playlister import model
 
 
@@ -22,5 +25,14 @@ class Loader(metaclass=abc.ABCMeta):
                 return subcls(station, interval, *args, **kwargs)
         raise ValueError(f"No Loader subclass with name '{cls_name}'")
 
-    def fetch(self, dt: datetime.datetime) -> list[Played]:
+    def fetch(self, day: datetime.date) -> list[Played]:
         raise NotImplementedError()
+
+    def fetch_and_persist(self, db: peewee.Database, day: datetime.date):
+        sync_time = datetime.datetime.now()
+
+        tracks = self.fetch(day)
+        logger.debug(f'Fetched {len(tracks)} tracks from {self.station.name}')
+
+        dbwriter = DatabaseWriter(db, self.station)
+        dbwriter.write(sync_time, tracks)

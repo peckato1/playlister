@@ -13,11 +13,11 @@ class CzechRadioLoader(Loader):
         super().__init__(station, interval, **kwargs)
         self.station_url = kwargs['stationname']
 
-    def fetch(self, dt: datetime.datetime):
+    def fetch(self, day: datetime.date):
         # Czech Radio API uses date only, fetch data for previous day too so we don't miss anything at midnight
 
         entries = []
-        for date in [dt - datetime.timedelta(days=1), dt]:
+        for date in [day - datetime.timedelta(days=1), day]:
             url = self.URL_TEMPLATE.format(date.year, date.month, date.day, self.station_url)
 
             r = requests.get(url)

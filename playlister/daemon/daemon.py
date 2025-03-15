@@ -6,7 +6,6 @@ import time
 import threading
 
 from .loaders import Loader
-from .persist import DatabaseWriter
 from .. import model
 
 
@@ -56,15 +55,13 @@ class PlaylisterDaemon:
         self.scheduler.enter(interval.total_seconds(), 0, self._loader_fetch, (loader,))
 
     def _loader_fetch(self, loader: Loader):
-        sync_time = datetime.datetime.now()
+        now = datetime.datetime.now()
 
         try:
-            tracks = loader.fetch(sync_time)
-            logger.debug(f'Fetched {len(tracks)} tracks from {loader.station.name}')
-            DatabaseWriter(self.db, loader.station).write(sync_time, tracks)
+            loader.fetch_and_persist(self.db, now.date())
         except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
         except Exception as e:
             logger.exception(f'Unexpected error while fetching data from {loader.station.name}: {e}')
 
-        self._schedule_next(loader, sync_time)
+        self._schedule_next(loader, now)
