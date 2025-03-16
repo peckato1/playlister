@@ -9,6 +9,12 @@ from .loaders import Loader
 from .. import model
 
 
+def _date_range(start_date: datetime.date, end_date: datetime.date):
+    while start_date <= end_date:
+        yield start_date
+        start_date += datetime.timedelta(days=1)
+
+
 class PlaylisterDaemon:
     DEFAULT_FETCH_INTERVAL = datetime.timedelta(minutes=5)
 
@@ -43,6 +49,13 @@ class PlaylisterDaemon:
         self.thread.join()
         return 0
 
+    def sync(self, start_date: datetime.date, end_date: datetime.date | None = None):
+        today = datetime.date.today()
+        for loader in self.loaders:
+            for date in _date_range(start_date, end_date if end_date is not None else today):
+                logger.info(f'Syncing {loader.station.name} for {date}')
+                self._loader_fetch(loader, date=date, fetch_yesterday=False)
+
     def _schedule_next(self, loader: Loader, sync_time: datetime.datetime):
         if loader.interval is None:
             interval = self.DEFAULT_FETCH_INTERVAL
@@ -53,13 +66,13 @@ class PlaylisterDaemon:
         logger.debug(f'Scheduling next fetch for {loader.station.name} at {next_sync_time} ({interval} from now)')
         self.scheduler.enter(interval.total_seconds(), 0, self._loader_fetch, (loader,))
 
-    def _loader_fetch(self, loader: Loader, date: datetime.date | None = None):
+    def _loader_fetch(self, loader: Loader, date: datetime.date | None = None, fetch_yesterday: bool = True):
         now = datetime.datetime.now()
 
         try:
             fetch_date = date if date is not None else now.date()
             logger.debug(f'Fetching data from {loader.station.name}, {fetch_date}')
-            loader.fetch_and_persist(self.db, fetch_date)
+            loader.fetch_and_persist(self.db, fetch_date, fetch_yesterday)
         except Loader.LoaderException as e:
             logger.exception(f'Failed to fetch data from {loader.station.name}: {e}')
         except Exception as e:

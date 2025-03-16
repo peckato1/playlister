@@ -25,13 +25,13 @@ class Loader(metaclass=abc.ABCMeta):
                 return subcls(station, interval, *args, **kwargs)
         raise ValueError(f"No Loader subclass with name '{cls_name}'")
 
-    def fetch(self, day: datetime.date) -> list[Played]:
+    def fetch(self, day: datetime.date, fetch_yesterday: bool) -> list[Played]:
         raise NotImplementedError()
 
-    def fetch_and_persist(self, db: peewee.Database, day: datetime.date):
+    def fetch_and_persist(self, db: peewee.Database, day: datetime.date, fetch_yesterday: bool):
         sync_time = datetime.datetime.now()
 
-        tracks = self.fetch(day)
+        tracks = self.fetch(day, fetch_yesterday)
         logger.debug(f'Fetched {len(tracks)} tracks from {self.station.name}')
 
         dbwriter = DatabaseWriter(db, self.station)

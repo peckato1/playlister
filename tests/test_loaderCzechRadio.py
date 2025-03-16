@@ -49,7 +49,7 @@ class TestLoaderCzechRadio(unittest.TestCase):
                                        station=self.StationMock(1, 'radiozurnal'),
                                        interval=None,
                                        stationname='radiozurnal')
-        loaded = loader.fetch(datetime.datetime(2025, 2, 7))
+        loaded = loader.fetch(datetime.datetime(2025, 2, 7), fetch_yesterday=True)
 
         self.assertEqual(loaded, [
             data.Played(
@@ -86,5 +86,32 @@ class TestLoaderCzechRadio(unittest.TestCase):
 
         self.assertEqual(mock_get.call_args_list, [
             unittest.mock.call('https://api.rozhlas.cz/data/v2/playlist/day/2025/02/06/radiozurnal.json'),
+            unittest.mock.call('https://api.rozhlas.cz/data/v2/playlist/day/2025/02/07/radiozurnal.json')
+            ])
+
+    @unittest.mock.patch('requests.get', side_effect=mock_requests_get)
+    def test_fetch_no_yesterday(self, mock_get):
+        loader = loaders.Loader.create('CzechRadioLoader',
+                                       station=self.StationMock(1, 'radiozurnal'),
+                                       interval=None,
+                                       stationname='radiozurnal')
+        loaded = loader.fetch(datetime.datetime(2025, 2, 7), fetch_yesterday=False)
+
+        self.assertEqual(loaded, [
+            data.Played(
+                start=datetime.datetime(2025, 2, 7, 0, 38, 5, tzinfo=datetime.timezone(datetime.timedelta(seconds=3600))),
+                interpret_name='R.E.M.',
+                track_name='IMITATION OF LIFE',
+                interpret_meta={'czechradio_id': 2988},
+                track_meta={'czechradio_id': 7535}),
+            data.Played(
+                start=datetime.datetime(2025, 2, 7, 1, 41, 55, tzinfo=datetime.timezone(datetime.timedelta(seconds=3600))),
+                interpret_name='CHINASKI',
+                track_name='STEJNĚ JAKO JÁ',
+                interpret_meta={'czechradio_id': 2987},
+                track_meta={'czechradio_id': 14056})
+            ])
+
+        self.assertEqual(mock_get.call_args_list, [
             unittest.mock.call('https://api.rozhlas.cz/data/v2/playlist/day/2025/02/07/radiozurnal.json')
             ])
