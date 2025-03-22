@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { axios, DEFAULT_PAGE_SIZE } from '../config'
 
 interface Pagination {
@@ -13,6 +13,13 @@ interface ApiQueryProps {
   resource: string;
   params?: QueryParams;
   pagination?: boolean;
+}
+
+function nextPage(pagination: Pagination) {
+  return {
+    pageIndex: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+  }
 }
 
 function constructQueryKey(resource: string, apiOptions: QueryParams) {
@@ -40,6 +47,7 @@ async function fetchApi({ resource, signal, queryParams } : { resource: string, 
 }
 
 export function useApiQuery(props: ApiQueryProps) {
+  const queryClient = useQueryClient()
   const [pagination, setPagination] = useState<Pagination>({
     pageIndex: 0 /* 0-based due to compatibility with material-react-table */,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -57,6 +65,19 @@ export function useApiQuery(props: ApiQueryProps) {
     }),
     placeholderData: previousData => previousData,
   })
+
+  // prefetch next page
+  if (isPaginationEnabled) {
+    const nextPageQueryParams = constructQueryParams(nextPage(pagination), props.params)
+    queryClient.prefetchQuery({
+      queryKey: constructQueryKey(props.resource, nextPageQueryParams),
+      queryFn: ({ signal }) => fetchApi({
+        resource: props.resource,
+        signal: signal,
+        queryParams: nextPageQueryParams,
+      }),
+    })
+  }
 
   return {
     query: query,
