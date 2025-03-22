@@ -3,8 +3,9 @@ import type { MRT_ColumnDef } from 'material-react-table';
 import { Interpret } from '../../model';
 import Link from '../../components/Link';
 import DataGrid from './DataGrid';
+import { DataGridProps } from './types';
 
-export default function TrackDataGrid({ data }: { data: Interpret[] }) {
+export default function TrackDataGrid(props: DataGridProps<Interpret>) {
   const columns = useMemo<MRT_ColumnDef<Interpret>[]>(
     () => [
       {
@@ -20,6 +21,6 @@ export default function TrackDataGrid({ data }: { data: Interpret[] }) {
     [],
   );
 
-  return <DataGrid columns={columns} data={data} />
+  return <DataGrid columns={columns} paginatedData={props.data} setPagination={props.setPagination} />
 };
 

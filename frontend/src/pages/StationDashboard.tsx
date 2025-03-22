@@ -14,7 +14,11 @@ export default function Page() {
         Stations
       </Typography>
 
-      <DataGridFactory type="station" data={apiQuery.query.data} />
+      <DataGridFactory
+        type="station"
+        data={apiQuery.query.data}
+        setPagination={apiQuery.setPagination}
+      />
     </>
   );
 }

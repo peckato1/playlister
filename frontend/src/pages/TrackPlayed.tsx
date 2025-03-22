@@ -9,5 +9,11 @@ export default function TrackPlayed() {
 
   if (apiQuery.query.isLoading) return <Loading />
 
-  return <DataGridFactory type="trackplayed" data={apiQuery.query.data} />
+  return (
+    <DataGridFactory
+      type="trackplayed"
+      data={apiQuery.query.data}
+      setPagination={apiQuery.setPagination}
+    />
+  )
 }

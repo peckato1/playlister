@@ -14,7 +14,11 @@ export default function Page() {
         Interprets
       </Typography>
 
-      <DataGridFactory type="interpret" data={apiQuery.query.data} />
+      <DataGridFactory
+        type="interpret"
+        data={apiQuery.query.data}
+        setPagination={apiQuery.setPagination}
+      />
     </>
   );
 }

@@ -1,5 +1,9 @@
 import datetime
 import pydantic
+import typing
+
+
+T = typing.TypeVar("T")
 
 
 class Station(pydantic.BaseModel):
@@ -26,3 +30,15 @@ class TrackPlayed(pydantic.BaseModel):
     synced_at: datetime.datetime
     station: Station
     track: Track
+
+
+class PaginatedResponseMeta(pydantic.BaseModel):
+    total: int
+    page: int
+    last_page: int
+    limit: int
+
+
+class PaginatedResponse(pydantic.BaseModel, typing.Generic[T]):
+    pagination: PaginatedResponseMeta | None
+    data: typing.List[T]

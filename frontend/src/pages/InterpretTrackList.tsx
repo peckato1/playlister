@@ -9,6 +9,12 @@ export default function InterpretTrackList() {
 
   if (apiQuery.query.isLoading) return <Loading />
 
-  return <DataGridFactory type="track" data={apiQuery.query.data} />
+  return (
+    <DataGridFactory
+      type="track"
+      data={apiQuery.query.data}
+      setPagination={apiQuery.setPagination}
+    />
+  )
 }
 

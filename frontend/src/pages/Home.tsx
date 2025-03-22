@@ -13,7 +13,12 @@ export default function Page() {
       <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
         Latest Tracks
       </Typography>
-      <DataGridFactory type="trackplayed" data={apiQuery.query.data} />
+
+      <DataGridFactory
+        type="trackplayed"
+        data={apiQuery.query.data}
+        setPagination={apiQuery.setPagination}
+      />
     </>
   );
 }

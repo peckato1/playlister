@@ -1,29 +1,42 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import type { Paginated } from './types'
+import * as config from '../../config'
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
-  type MRT_TableOptions,
   type MRT_RowData,
+  type MRT_Updater,
+  MRT_PaginationState,
 } from 'material-react-table'
 
-interface Props<T extends MRT_RowData> extends MRT_TableOptions<T> {
-  data: T[]
-  columns: MRT_ColumnDef<T>[]
+interface Props<T extends MRT_RowData> {
+  paginatedData: Paginated<T>
   hiddenColumns?: string[]
+  columns: MRT_ColumnDef<T>[]
+  setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>
 }
+
 interface HiddenColumns {
   [key: string]: boolean
 }
 
 export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
-  const data = props.data
+  const data = props.paginatedData.data
   const columns = props.columns
   const hiddenColumns = (props.hiddenColumns ?? []).reduce((acc: HiddenColumns, col: string) => {
     acc[col] = false
     return acc
   }, {} as HiddenColumns)
+
+  const handlePaginationChange = (updater: MRT_Updater<MRT_PaginationState>) => {
+    if (props.setPagination) {
+      props.setPagination((prevPagination: MRT_PaginationState) =>
+        typeof updater === 'function' ? updater(prevPagination) : updater
+      );
+    }
+  };
 
   const table = useMaterialReactTable<T>({
     columns,
@@ -31,11 +44,19 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
     enableDensityToggle: false,
     initialState: {
       columnVisibility: hiddenColumns,
-      pagination: { pageSize: 100, pageIndex: 0 },
       density: 'compact',
     },
+    state: {
+      pagination: {
+        pageIndex: props.paginatedData.pagination.page - 1,
+        pageSize: props.paginatedData.pagination.limit,
+      },
+    },
+    rowCount: props.paginatedData.pagination.total,
+    manualPagination: true,
+    onPaginationChange: handlePaginationChange,
     muiPaginationProps: {
-      rowsPerPageOptions: [25, 50, 100, 200, 500],
+      rowsPerPageOptions: config.DATAGRID_PAGE_SIZE_OPTIONS,
       showFirstButton: true,
       showLastButton: true,
     },

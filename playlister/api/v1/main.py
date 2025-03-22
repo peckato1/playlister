@@ -1,4 +1,5 @@
 import fastapi
+import math
 import os
 import peewee
 import peewee_async
@@ -26,8 +27,18 @@ Pagination = typing.Annotated[dict, fastapi.Depends(pagination)]
 StationIdFilter = typing.Annotated[list, fastapi.Depends(station_id_filter)]
 
 
-def paginate(pagination: Pagination, query):
-    return list(query.paginate(pagination["page"], pagination["limit"]))
+def paginate(pagination: Pagination, query) -> apimodel.PaginatedResponse:
+    total_count = query.count()
+
+    return apimodel.PaginatedResponse(
+        data=list(query.paginate(pagination["page"], pagination["limit"])),
+        pagination=apimodel.PaginatedResponseMeta(
+            limit=pagination["limit"],
+            page=pagination["page"],
+            last_page=math.ceil(total_count / pagination["limit"]),
+            total=total_count,
+        ),
+    )
 
 
 def filter_stations(stationIdFilter: StationIdFilter, query: peewee.ModelSelect):
@@ -37,13 +48,13 @@ def filter_stations(stationIdFilter: StationIdFilter, query: peewee.ModelSelect)
 
 
 @router.get("/played")
-async def played(p: Pagination) -> typing.List[apimodel.TrackPlayed]:
+async def played(p: Pagination) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return paginate(p, m.TrackPlayed.select().order_by(m.TrackPlayed.start.desc()))
 
 
 @router.get("/stations")
-async def stations() -> typing.List[apimodel.Station]:
-    return list(m.Station.select())
+async def stations(p: Pagination) -> apimodel.PaginatedResponse[apimodel.Station]:
+    return paginate(p, m.Station.select())
 
 
 @router.get("/stations/{station_id}")
@@ -52,12 +63,12 @@ async def station(station_id: int) -> apimodel.Station:
 
 
 @router.get("/stations/{station_id}/played")
-async def station_played(station_id: int, p: Pagination) -> typing.List[apimodel.TrackPlayed]:
+async def station_played(station_id: int, p: Pagination) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return paginate(p, m.TrackPlayed.select().where(m.TrackPlayed.station == station_id).order_by(m.TrackPlayed.start.desc()))
 
 
 @router.get("/interprets")
-async def interprets(p: Pagination) -> typing.List[apimodel.Interpret]:
+async def interprets(p: Pagination) -> apimodel.PaginatedResponse[apimodel.Interpret]:
     return paginate(p, m.Interpret.select())
 
 
@@ -67,18 +78,18 @@ async def interpret(interpret_id: int) -> apimodel.Interpret:
 
 
 @router.get("/interprets/{interpret_id}/tracks")
-async def interpret_tracks(interpret_id: int, p: Pagination) -> typing.List[apimodel.Track]:
+async def interpret_tracks(interpret_id: int, p: Pagination) -> apimodel.PaginatedResponse[apimodel.Track]:
     return paginate(p, m.Track.select().where(m.Track.interpret == interpret_id))
 
 
 @router.get("/interprets/{interpret_id}/played")
-async def interpret_played(interpret_id: int, p: Pagination, station_filter: StationIdFilter) -> typing.List[apimodel.TrackPlayed]:
+async def interpret_played(interpret_id: int, p: Pagination, station_filter: StationIdFilter) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     q = m.TrackPlayed.select().join(m.Track).where(m.Track.interpret == interpret_id)
     return paginate(p, filter_stations(station_filter, q).order_by(m.TrackPlayed.start.desc()))
 
 
 @router.get("/tracks")
-async def tracks(p: Pagination) -> typing.List[apimodel.Track]:
+async def tracks(p: Pagination) -> apimodel.PaginatedResponse[apimodel.Track]:
     return paginate(p, m.Track.select(m.Track, m.Interpret).join(m.Interpret))
 
 
@@ -89,6 +100,6 @@ async def track(track_id: int) -> apimodel.Track:
 
 
 @router.get("/tracks/{track_id}/played")
-async def track_played(track_id: int, p: Pagination, station_filter: StationIdFilter) -> typing.List[apimodel.TrackPlayed]:
+async def track_played(track_id: int, p: Pagination, station_filter: StationIdFilter) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     q = m.TrackPlayed.select().where(m.TrackPlayed.track == track_id)
     return paginate(p, filter_stations(station_filter, q).order_by(m.TrackPlayed.start.desc()))

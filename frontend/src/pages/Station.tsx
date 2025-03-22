@@ -18,7 +18,11 @@ export default function Page() {
       </Typography>
 
       <Outlet />
-      <DataGridFactory type="trackplayed" data={apiQueryPlayed.query.data} />
+      <DataGridFactory
+        type="trackplayed"
+        data={apiQueryPlayed.query.data}
+        setPagination={apiQueryPlayed.setPagination}
+      />
     </>
   );
 }
