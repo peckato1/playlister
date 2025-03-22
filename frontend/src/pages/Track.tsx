@@ -1,18 +1,18 @@
 import { useParams, Outlet } from 'react-router';
-import useApi from '../hooks/useApiQuery';
+import { useApiQuery } from '../hooks/useApiQuery';
 import Loading from '../components/Loading';
 import NavTabs from '../components/NavTabs';
 import TitleAndServiceLinks from '../components/TitleAndServiceLinks';
 
 export default function Page() {
   const { trackId } = useParams();
-  const query = useApi({ resource: `tracks/${trackId}` });
+  const apiQuery = useApiQuery({ resource: `tracks/${trackId}`, pagination: false });
 
-  if (query.isLoading) return <Loading />
+  if (apiQuery.query.isLoading) return <Loading />
 
   return (
     <>
-      <TitleAndServiceLinks interpret={query.data.interpret.name} track={query.data.name} />
+      <TitleAndServiceLinks interpret={apiQuery.query.data.interpret.name} track={apiQuery.query.data.name} />
 
       <NavTabs tabs={[{ label: 'Last played', href: '.' }]} />
 

@@ -1,18 +1,18 @@
 import { useParams, Outlet } from 'react-router';
 import Loading from '../components/Loading';
-import useApi from '../hooks/useApiQuery';
+import { useApiQuery } from '../hooks/useApiQuery';
 import NavTabs from '../components/NavTabs';
 import TitleAndServiceLinks from '../components/TitleAndServiceLinks';
 
 export default function Page() {
   const { interpretId } = useParams();
-  const queryInterpret = useApi({ resource: `interprets/${interpretId}` });
+  const apiQuery = useApiQuery({ resource: `interprets/${interpretId}`, pagination: false });
 
-  if (queryInterpret.isLoading) return <Loading />
+  if (apiQuery.query.isLoading) return <Loading />
 
   return (
     <>
-      <TitleAndServiceLinks interpret={queryInterpret.data.name} />
+      <TitleAndServiceLinks interpret={apiQuery.query.data.name} />
 
       <NavTabs tabs={[{ label: 'Last played', href: '.' }, { label: 'Track list', href: 'tracks' }]} />
 

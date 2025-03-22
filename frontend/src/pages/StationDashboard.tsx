@@ -1,12 +1,12 @@
 import Loading from '../components/Loading';
-import useApi from '../hooks/useApiQuery';
+import { useApiQuery } from '../hooks/useApiQuery';
 import Typography from '@mui/material/Typography';
 import DataGridFactory from '../components/datagrid/DataGridFactory';
 
 export default function Page() {
-  const { isLoading, data } = useApi({ resource: '/stations' });
+  const apiQuery = useApiQuery({ resource: '/stations', pagination: true });
 
-  if (isLoading) return <Loading />
+  if (apiQuery.query.isLoading) return <Loading />
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function Page() {
         Stations
       </Typography>
 
-      <DataGridFactory type="station" data={data} />
+      <DataGridFactory type="station" data={apiQuery.query.data} />
     </>
   );
 }

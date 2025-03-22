@@ -1,22 +1,65 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '../config'
+import { axios, DEFAULT_PAGE_SIZE } from '../config'
 
-interface QueryParams {
-  [key: string]: string | number
+interface Pagination {
+  pageIndex: number;
+  pageSize: number;
 }
-async function fetchApi(resource: string, signal: AbortSignal, queryParams?: QueryParams) {
+
+type QueryParams = Record<string, string|number>;
+
+interface ApiQueryProps {
+  resource: string;
+  params?: QueryParams;
+  pagination?: boolean;
+}
+
+function constructQueryKey(resource: string, apiOptions: QueryParams) {
+  return [resource, apiOptions]
+}
+
+function constructQueryParams(pagination?: Pagination, queryParams: QueryParams = {}): QueryParams {
+  if (!pagination) {
+    return queryParams
+  }
+
+  return {
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    ...queryParams,
+  }
+}
+
+async function fetchApi({ resource, signal, queryParams } : { resource: string, signal: AbortSignal, queryParams: QueryParams }) {
   const { data } = await axios.get(resource, {
-    params: queryParams || {},
+    params: queryParams,
     signal: signal,
   })
   return data
 }
 
-export default function useApi({ resource, queryParams } : { resource: string, queryParams?: QueryParams }) {
-  const query = useQuery({
-    queryKey: [resource, queryParams],
-    queryFn: ({ signal }) => fetchApi(resource, signal, queryParams),
+export function useApiQuery(props: ApiQueryProps) {
+  const [pagination, setPagination] = useState<Pagination>({
+    pageIndex: 0 /* 0-based due to compatibility with material-react-table */,
+    pageSize: DEFAULT_PAGE_SIZE,
   })
 
-  return query
+  const isPaginationEnabled = props.pagination === true
+  const queryParams = constructQueryParams(isPaginationEnabled ? pagination : undefined, props.params)
+
+  const query = useQuery({
+    queryKey: constructQueryKey(props.resource, queryParams),
+    queryFn: ({ signal }) => fetchApi({
+      resource: props.resource,
+      signal: signal,
+      queryParams: queryParams,
+    }),
+    placeholderData: previousData => previousData,
+  })
+
+  return {
+    query: query,
+    setPagination: isPaginationEnabled ? setPagination : undefined,
+  }
 }
