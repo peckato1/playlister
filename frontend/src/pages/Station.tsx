@@ -20,7 +20,7 @@ export default function Page() {
       <Outlet />
       <DataGridFactory
         type="trackplayed"
-        data={apiQueryPlayed.query.data}
+        paginatedData={apiQueryPlayed.query.data}
         setPagination={apiQueryPlayed.setPagination}
         enableColumnFilters={{
           'station.name': false,

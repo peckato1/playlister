@@ -13,7 +13,10 @@ export interface Paginated<T> {
 }
 
 export interface DataGridProps<T> {
-  data: Paginated<T>;
-  setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>
-  enableColumnFilters?: Record<string, boolean>
+  paginatedData: Paginated<T>;
+  setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>;
+}
+
+export interface ConcreteDataGridProps<T> extends DataGridProps<T> {
+  enableColumnFilters?: Record<string, boolean>;
 }

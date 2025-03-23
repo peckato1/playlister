@@ -12,7 +12,7 @@ export default function InterpretTrackList() {
   return (
     <DataGridFactory
       type="track"
-      data={apiQuery.query.data}
+      paginatedData={apiQuery.query.data}
       setPagination={apiQuery.setPagination}
       enableColumnFilters={{'interpret.name': false}}
     />

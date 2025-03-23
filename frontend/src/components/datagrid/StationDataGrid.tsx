@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 import { Station } from '../../model';
 import Link from '../../components/Link';
 import DataGrid from './DataGrid';
-import { DataGridProps } from './types';
+import { ConcreteDataGridProps } from './types';
 
-export default function StationDataGrid(props: DataGridProps<Station>) {
+export default function StationDataGrid(props: ConcreteDataGridProps<Station>) {
   const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
@@ -31,5 +31,5 @@ export default function StationDataGrid(props: DataGridProps<Station>) {
     [props.enableColumnFilters],
   );
 
-  return <DataGrid columns={columns} paginatedData={props.data} hiddenColumns={['loader_interval']} setPagination={props.setPagination} />
+  return <DataGrid columns={columns} hiddenColumns={['loader_interval']} {...props} />
 };

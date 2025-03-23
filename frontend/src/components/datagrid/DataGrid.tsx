@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import type { Paginated } from './types'
+import type { DataGridProps } from './types'
 import * as config from '../../config'
 import {
   MaterialReactTable,
@@ -13,11 +13,9 @@ import {
   MRT_PaginationState,
 } from 'material-react-table'
 
-interface Props<T extends MRT_RowData> {
-  paginatedData: Paginated<T>
+interface Props<T extends MRT_RowData> extends DataGridProps<T> {
   hiddenColumns?: string[]
   columns: MRT_ColumnDef<T>[]
-  setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>
 }
 
 type HiddenColumns = Record<string, boolean>

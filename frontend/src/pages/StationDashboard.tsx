@@ -16,7 +16,7 @@ export default function Page() {
 
       <DataGridFactory
         type="station"
-        data={apiQuery.query.data}
+        paginatedData={apiQuery.query.data}
         setPagination={apiQuery.setPagination}
       />
     </>

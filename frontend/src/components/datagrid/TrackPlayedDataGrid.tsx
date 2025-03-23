@@ -5,9 +5,9 @@ import { TrackPlayed } from '../../model';
 import Link from '../../components/Link';
 import TimeWithRelative from '../../components/TimeWithRelative';
 import DataGrid from './DataGrid';
-import { DataGridProps } from './types';
+import { ConcreteDataGridProps } from './types';
 
-export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
+export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPlayed>) {
   const columns = useMemo<MRT_ColumnDef<TrackPlayed>[]>(
     () => [
       {
@@ -59,5 +59,5 @@ export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
     [props.enableColumnFilters],
   );
 
-  return <DataGrid columns={columns} paginatedData={props.data} hiddenColumns={['synced']} setPagination={props.setPagination} />
+  return <DataGrid columns={columns} hiddenColumns={['synced']} {...props} />
 };
