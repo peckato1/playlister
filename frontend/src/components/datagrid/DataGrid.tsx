@@ -18,9 +18,7 @@ interface Props<T extends MRT_RowData> {
   setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>
 }
 
-interface HiddenColumns {
-  [key: string]: boolean
-}
+type HiddenColumns = Record<string, boolean>
 
 export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
   const data = props.paginatedData.data
