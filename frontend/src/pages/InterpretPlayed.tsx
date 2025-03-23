@@ -15,7 +15,7 @@ export default function InterpretPlayed() {
       paginatedData={apiQuery.query.data}
       setPagination={apiQuery.setPagination}
       enableColumnFilters={{
-        'track.interpret.name': false,
+        'interpret': false,
       }}
     />
   )

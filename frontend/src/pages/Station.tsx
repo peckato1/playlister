@@ -23,7 +23,7 @@ export default function Page() {
         paginatedData={apiQueryPlayed.query.data}
         setPagination={apiQueryPlayed.setPagination}
         enableColumnFilters={{
-          'station.name': false,
+          'station': false,
           'synced': false,
         }}
       />

@@ -9,6 +9,7 @@ export default function TrackDataGrid(props: ConcreteDataGridProps<Interpret>) {
   const columns = useMemo<MRT_ColumnDef<Interpret>[]>(
     () => [
       {
+        id: 'interpret',
         accessorKey: 'name',
         header: 'Interpret',
         Cell: ({ renderedCellValue, row }) => (
@@ -16,7 +17,7 @@ export default function TrackDataGrid(props: ConcreteDataGridProps<Interpret>) {
             {renderedCellValue}
           </Link>
         ),
-        enableColumnFilter: props.enableColumnFilters?.['name'],
+        enableColumnFilter: props.enableColumnFilters?.['interpret'],
       },
     ],
     [props.enableColumnFilters],

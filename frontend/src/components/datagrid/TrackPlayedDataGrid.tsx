@@ -11,6 +11,7 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
   const columns = useMemo<MRT_ColumnDef<TrackPlayed>[]>(
     () => [
       {
+        id: 'station',
         accessorKey: 'station.name',
         header: 'Station',
         Cell: ({ renderedCellValue, row }) => (
@@ -18,9 +19,10 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
             {renderedCellValue}
           </Link>
         ),
-        enableColumnFilter: props.enableColumnFilters?.['station.name'],
+        enableColumnFilter: props.enableColumnFilters?.['station'],
       },
       {
+        id: 'interpret',
         accessorKey: 'track.interpret.name',
         header: 'Interpret',
         Cell: ({ renderedCellValue, row }) => (
@@ -28,9 +30,10 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
             {renderedCellValue}
           </Link>
         ),
-        enableColumnFilter: props.enableColumnFilters?.['track.interpret.name'],
+        enableColumnFilter: props.enableColumnFilters?.['interpret'],
       },
       {
+        id: 'track',
         accessorKey: 'track.name',
         header: 'Track',
         Cell: ({ renderedCellValue, row }) => (
@@ -38,9 +41,10 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
             {renderedCellValue}
           </Link>
         ),
-        enableColumnFilter: props.enableColumnFilters?.['track.name'],
+        enableColumnFilter: props.enableColumnFilters?.['track'],
       },
       {
+        id: 'start',
         accessorFn: (originalRow) => dayjs(originalRow.start),
         filterVariant: 'datetime-range',
         header: 'Start',
@@ -48,11 +52,11 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
         enableColumnFilter: props.enableColumnFilters?.['start'],
       },
       {
+        id: 'synced',
         accessorFn: (originalRow) => dayjs(originalRow.synced_at),
         filterVariant: 'datetime-range',
         header: 'Sync time',
         Cell: ({ cell }) => <TimeWithRelative time={cell.getValue<dayjs.Dayjs>()} />,
-        id: 'synced',
         enableColumnFilter: props.enableColumnFilters?.['synced'],
       },
     ],

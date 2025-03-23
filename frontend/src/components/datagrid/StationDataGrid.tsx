@@ -9,6 +9,7 @@ export default function StationDataGrid(props: ConcreteDataGridProps<Station>) {
   const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
+        id: 'station',
         accessorKey: 'name',
         header: 'Station',
         Cell: ({ renderedCellValue, row }) => (
@@ -16,7 +17,7 @@ export default function StationDataGrid(props: ConcreteDataGridProps<Station>) {
             {renderedCellValue}
           </Link>
         ),
-        enableColumnFilter: props.enableColumnFilters?.['name'],
+        enableColumnFilter: props.enableColumnFilters?.['station'],
       },
       {
         id: 'loader_interval',
@@ -25,7 +26,7 @@ export default function StationDataGrid(props: ConcreteDataGridProps<Station>) {
         Cell: ({ renderedCellValue }) => {
           return renderedCellValue || "N/A";
         },
-        enableColumnFilter: props.enableColumnFilters?.['station.loader_interval'],
+        enableColumnFilter: props.enableColumnFilters?.['loader_interval'],
       },
     ],
     [props.enableColumnFilters],
