@@ -1,4 +1,6 @@
+import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import type { Paginated } from './types'
 import * as config from '../../config'
@@ -58,6 +60,18 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
       rowsPerPageOptions: config.DATAGRID_PAGE_SIZE_OPTIONS,
       showFirstButton: true,
       showLastButton: true,
+    },
+    muiFilterDateTimePickerProps: {
+      ampm: false,
+      ampmInClock: false,
+      minDate: config.DATAGRID_MIN_DATE as unknown as undefined /* bypassing "Type 'Dayjs' is not assignable to type 'undefined'." */,
+      maxDate: dayjs().endOf('day') as unknown as undefined,
+      yearsOrder: 'desc',
+      viewRenderers: {
+        hours: renderTimeViewClock,
+        minutes: renderTimeViewClock,
+        seconds: renderTimeViewClock,
+      }
     },
   })
 
