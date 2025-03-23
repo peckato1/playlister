@@ -43,6 +43,7 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
     initialState: {
       columnVisibility: hiddenColumns,
       density: 'compact',
+      showColumnFilters: true,
     },
     state: {
       pagination: {

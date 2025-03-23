@@ -14,6 +14,10 @@ export default function TrackPlayed() {
       type="trackplayed"
       data={apiQuery.query.data}
       setPagination={apiQuery.setPagination}
+      enableColumnFilters={{
+        'track.interpret.name': false,
+        'track.name': false,
+      }}
     />
   )
 }

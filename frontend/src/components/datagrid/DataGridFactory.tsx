@@ -13,16 +13,17 @@ interface Props<T> extends DataGridProps<T> {
 }
 
 export default function DataGridFactory<T>(props: Props<T>) {
-  switch (props.type) {
+  const { data, type, ...passthrough } = props
+  switch (type) {
     case 'station':
-      return <StationDataGrid data={props.data as Paginated<Station>} setPagination={props.setPagination} />
+      return <StationDataGrid data={data as Paginated<Station>} {...passthrough} />
     case 'interpret':
-      return <InterpretDataGrid data={props.data as Paginated<Track>} setPagination={props.setPagination} />
+      return <InterpretDataGrid data={data as Paginated<Track>} {...passthrough} />
     case 'track':
-      return <TrackDataGrid data={props.data as Paginated<Track>} setPagination={props.setPagination} />
+      return <TrackDataGrid data={data as Paginated<Track>} {...passthrough} />
     case 'trackplayed':
-      return <TrackPlayedDataGrid data={props.data as Paginated<TrackPlayed>} setPagination={props.setPagination} />
+      return <TrackPlayedDataGrid data={data as Paginated<TrackPlayed>} {...passthrough} />
     default:
-      throw new Error(`Unknown DataGridType: '${props.type}'`)
+      throw new Error(`Unknown DataGridType: '${type}'`)
   }
 }

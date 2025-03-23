@@ -18,6 +18,7 @@ export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['station.name'],
       },
       {
         accessorKey: 'track.interpret.name',
@@ -27,6 +28,7 @@ export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['track.interpret.name'],
       },
       {
         accessorKey: 'track.name',
@@ -36,12 +38,14 @@ export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['track.name'],
       },
       {
         accessorFn: (originalRow) => dayjs(originalRow.start),
         filterVariant: 'datetime-range',
         header: 'Start',
         Cell: ({ cell }) => <TimeWithRelative time={cell.getValue<dayjs.Dayjs>()} />,
+        enableColumnFilter: props.enableColumnFilters?.['start'],
       },
       {
         accessorFn: (originalRow) => dayjs(originalRow.synced_at),
@@ -49,9 +53,10 @@ export default function TrackPlayedDataGrid(props: DataGridProps<TrackPlayed>) {
         header: 'Sync time',
         Cell: ({ cell }) => <TimeWithRelative time={cell.getValue<dayjs.Dayjs>()} />,
         id: 'synced',
+        enableColumnFilter: props.enableColumnFilters?.['synced'],
       },
     ],
-    [],
+    [props.enableColumnFilters],
   );
 
   return <DataGrid columns={columns} paginatedData={props.data} hiddenColumns={['synced']} setPagination={props.setPagination} />

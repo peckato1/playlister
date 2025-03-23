@@ -16,6 +16,7 @@ export default function StationDataGrid(props: DataGridProps<Station>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['name'],
       },
       {
         id: 'loader_interval',
@@ -23,10 +24,11 @@ export default function StationDataGrid(props: DataGridProps<Station>) {
         header: 'Loader interval',
         Cell: ({ renderedCellValue }) => {
           return renderedCellValue || "N/A";
-        }
+        },
+        enableColumnFilter: props.enableColumnFilters?.['station.loader_interval'],
       },
     ],
-    [],
+    [props.enableColumnFilters],
   );
 
   return <DataGrid columns={columns} paginatedData={props.data} hiddenColumns={['loader_interval']} setPagination={props.setPagination} />

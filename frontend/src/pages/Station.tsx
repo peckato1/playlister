@@ -22,6 +22,10 @@ export default function Page() {
         type="trackplayed"
         data={apiQueryPlayed.query.data}
         setPagination={apiQueryPlayed.setPagination}
+        enableColumnFilters={{
+          'station.name': false,
+          'synced': false,
+        }}
       />
     </>
   );

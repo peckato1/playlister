@@ -16,6 +16,7 @@ export default function TrackDataGrid(props: DataGridProps<Track>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['interpret.name'],
       },
       {
         accessorKey: 'name',
@@ -25,9 +26,10 @@ export default function TrackDataGrid(props: DataGridProps<Track>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['name'],
       },
     ],
-    [],
+    [props.enableColumnFilters],
   );
 
   return <DataGrid<Track> columns={columns} paginatedData={props.data} setPagination={props.setPagination} />

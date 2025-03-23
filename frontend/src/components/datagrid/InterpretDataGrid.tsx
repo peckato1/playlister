@@ -16,9 +16,10 @@ export default function TrackDataGrid(props: DataGridProps<Interpret>) {
             {renderedCellValue}
           </Link>
         ),
+        enableColumnFilter: props.enableColumnFilters?.['name'],
       },
     ],
-    [],
+    [props.enableColumnFilters],
   );
 
   return <DataGrid columns={columns} paginatedData={props.data} setPagination={props.setPagination} />
