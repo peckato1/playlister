@@ -14,6 +14,7 @@ export default function InterpretTrackList() {
       type="track"
       paginatedData={apiQuery.query.data}
       setPagination={apiQuery.setPagination}
+      setColumnFilters={apiQuery.setColumnFilters}
       enableColumnFilters={{'interpret': false}}
     />
   )

@@ -11,6 +11,7 @@ import {
   type MRT_RowData,
   type MRT_Updater,
   MRT_PaginationState,
+  type MRT_ColumnFiltersState,
 } from 'material-react-table'
 
 interface Props<T extends MRT_RowData> extends DataGridProps<T> {
@@ -32,6 +33,14 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
     if (props.setPagination) {
       props.setPagination((prevPagination: MRT_PaginationState) =>
         typeof updater === 'function' ? updater(prevPagination) : updater
+      );
+    }
+  };
+
+  const handleColumnFiltersChange = (updater: MRT_Updater<MRT_ColumnFiltersState>) => {
+    if (props.setColumnFilters) {
+      props.setColumnFilters((prevFilters: MRT_ColumnFiltersState) =>
+        typeof updater === 'function' ? updater(prevFilters) : updater
       );
     }
   };
@@ -59,6 +68,7 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
       showFirstButton: true,
       showLastButton: true,
     },
+    onColumnFiltersChange: handleColumnFiltersChange,
     muiFilterDateTimePickerProps: {
       ampm: false,
       ampmInClock: false,

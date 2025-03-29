@@ -113,8 +113,6 @@ export function useApiQuery(props: ApiQueryProps) {
     })
   }
 
-  console.log(columnFilters)
-
   return {
     query: query,
     setPagination: isPaginationEnabled ? setPagination : undefined,

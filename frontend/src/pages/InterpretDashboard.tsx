@@ -18,6 +18,7 @@ export default function Page() {
         type="interpret"
         paginatedData={apiQuery.query.data}
         setPagination={apiQuery.setPagination}
+        setColumnFilters={apiQuery.setColumnFilters}
       />
     </>
   );
