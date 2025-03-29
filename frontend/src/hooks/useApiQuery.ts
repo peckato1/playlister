@@ -7,6 +7,11 @@ interface Pagination {
   pageSize: number;
 }
 
+interface ColumnFilter {
+  id: string;
+  value: unknown;
+}
+
 type QueryParams = Record<string, string|number>;
 
 interface ApiQueryProps {
@@ -26,15 +31,35 @@ function constructQueryKey(resource: string, apiOptions: QueryParams) {
   return [resource, apiOptions]
 }
 
-function constructQueryParams(pagination?: Pagination, queryParams: QueryParams = {}): QueryParams {
+function qPagination(pagination?: Pagination): QueryParams {
   if (!pagination) {
-    return queryParams
+    return {}
   }
-
   return {
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    ...queryParams,
+  }
+}
+
+function qSearch(columnFilters: ColumnFilter[]): QueryParams {
+  if (columnFilters.length === 0) {
+    return {};
+  }
+  return {
+    query: columnFilters.map(e => `${e.id}~=${e.value}`).join(";")
+  }
+}
+
+interface ConstructQueryParamsProps {
+  pagination?: Pagination;
+  columnFilters: ColumnFilter[];
+  queryParams?: QueryParams
+}
+function constructQueryParams({ pagination, columnFilters, queryParams }: ConstructQueryParamsProps): QueryParams {
+  return {
+    ...qPagination(pagination),
+    ...qSearch(columnFilters),
+    ...(queryParams || {}),
   }
 }
 
@@ -52,9 +77,14 @@ export function useApiQuery(props: ApiQueryProps) {
     pageIndex: 0 /* 0-based due to compatibility with material-react-table */,
     pageSize: DEFAULT_PAGE_SIZE,
   })
+  const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([])
 
   const isPaginationEnabled = props.pagination === true
-  const queryParams = constructQueryParams(isPaginationEnabled ? pagination : undefined, props.params)
+  const queryParams = constructQueryParams({
+    pagination: isPaginationEnabled ? pagination : undefined,
+    columnFilters,
+    queryParams: props.params,
+  })
 
   const query = useQuery({
     queryKey: constructQueryKey(props.resource, queryParams),
@@ -68,7 +98,11 @@ export function useApiQuery(props: ApiQueryProps) {
 
   // prefetch next page
   if (isPaginationEnabled) {
-    const nextPageQueryParams = constructQueryParams(nextPage(pagination), props.params)
+    const nextPageQueryParams = constructQueryParams({
+      pagination: nextPage(pagination),
+      columnFilters,
+      queryParams:props.params,
+    })
     queryClient.prefetchQuery({
       queryKey: constructQueryKey(props.resource, nextPageQueryParams),
       queryFn: ({ signal }) => fetchApi({
@@ -79,8 +113,11 @@ export function useApiQuery(props: ApiQueryProps) {
     })
   }
 
+  console.log(columnFilters)
+
   return {
     query: query,
     setPagination: isPaginationEnabled ? setPagination : undefined,
+    setColumnFilters: setColumnFilters,
   }
 }
