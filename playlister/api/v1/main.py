@@ -6,6 +6,7 @@ import typing
 
 import playlister.model as m
 from . import model as apimodel
+from . import grammars
 
 
 router = fastapi.APIRouter(
@@ -36,32 +37,14 @@ class PaginationQ:
 class SearchQ:
     def __init__(self, query: str = fastapi.Query(None)):
         try:
-            self.fragments = self.parseFragments(query) if query is not None else []
+            self.whereCond = grammars.parseSearchQ(query)
         except ValueError:
             raise fastapi.HTTPException(status_code=500,
                                         detail=f"Invalid syntax for query parameter ('{query}')")
 
-    @classmethod
-    def parseFragments(cls, query: str):
-        return list(map(lambda x: cls.parseOneFragment(x), query.split(";")))
-
-    @classmethod
-    def parseOneFragment(cls, fragment: str):
-        lhs, rhs = fragment.split("~=")
-        return { 'field': cls.parseField(lhs), 'value': rhs }
-
-    @classmethod
-    def parseField(cls, field: str) -> str:
-        d = {
-            "interpret": m.Interpret.name,
-            "track": m.Track.name,
-            "station": m.Station.name,
-        }
-        return d[field.lower()]
-
     def __call__(self, query):
-        if len(self.fragments) > 0:
-            return query.where(functools.reduce(lambda a, b: a & b, map(lambda x: (x['field'] ** f"%{x['value']}%"), self.fragments)))
+        if self.whereCond:
+            return query.where(self.whereCond)
         return query
 
 

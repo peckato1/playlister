@@ -12,3 +12,4 @@ requests==2.32.3
 urllib3==2.3.0
 peewee_async==1.0.0
 fastapi[standard]==0.115.8
+lark==1.2.2

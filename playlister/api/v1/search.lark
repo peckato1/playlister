@@ -1,0 +1,12 @@
+start: item (";" item)*
+empty:
+item: field operator value
+field: WORD
+?value: STR
+      | empty
+operator: ILIKE
+
+ILIKE: "~="
+STR: /[^;]+/
+
+%import common.WORD
