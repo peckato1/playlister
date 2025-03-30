@@ -27,6 +27,20 @@ class OperatorType(enum.StrEnum):
     ILIKE = enum.auto()
 
 
+class SortOperatorType(enum.StrEnum):
+    ASC = enum.auto()
+    DESC = enum.auto()
+
+
+def pw_sortop(op: SortOperatorType, pw_field):
+    if op == SortOperatorType.ASC:
+        return +pw_field
+    elif op == SortOperatorType.DESC:
+        return -pw_field
+    else:
+        raise ValueError(f"Unknown sort operator '{op}'")
+
+
 class SearchTransformer(lark.Transformer):
     def start(self, children):
         return functools.reduce(lambda prev, e: prev & e, children)
@@ -40,6 +54,24 @@ class SearchTransformer(lark.Transformer):
 
     def operator(self, children):
         return OperatorType[children[0].type]
+
+
+class SortTransformer(lark.Transformer):
+    def start(self, children):
+        return children
+
+    def field(self, children):
+        return field_to_column(children[0].value)
+
+    def item_operator(self, children):
+        op, value = children
+        return pw_sortop(op, value)
+
+    def item(self, children):
+        return pw_sortop(SortOperatorType.ASC, children[0])
+
+    def operator(self, children):
+        return SortOperatorType[children[0].type]
 
 
 def parse(grammar_filename: str, transformer_cls: typing.Type[lark.Transformer], inp: str):
@@ -57,3 +89,9 @@ def parseSearchQ(s: str | None):
     if not s:
         return None
     return parse("search.lark", SearchTransformer, s)
+
+
+def parseSortQ(s: str | None):
+    if not s:
+        return None
+    return parse("sort.lark", SortTransformer, s)

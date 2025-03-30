@@ -34,26 +34,29 @@ class PaginationQ:
         )
 
 
-class SearchQ:
-    def __init__(self, query: str = fastapi.Query(None)):
+class SearchSortQ:
+    def __init__(self, query: str = fastapi.Query(None), sort: str = fastapi.Query(None)):
         try:
             self.whereCond = grammars.parseSearchQ(query)
+            self.orderByCond = grammars.parseSortQ(sort)
         except ValueError:
             raise fastapi.HTTPException(status_code=500,
                                         detail=f"Invalid syntax for query parameter ('{query}')")
 
     def __call__(self, query):
         if self.whereCond:
-            return query.where(self.whereCond)
+            query = query.where(self.whereCond)
+        if self.orderByCond:
+            query = query.order_by(*self.orderByCond)
         return query
 
 
 Pagination = typing.Annotated[PaginationQ, fastapi.Depends(PaginationQ)]
-Search = typing.Annotated[SearchQ, fastapi.Depends(SearchQ)]
+SearchSort = typing.Annotated[SearchSortQ, fastapi.Depends(SearchSortQ)]
 
 
 @router.get("/played")
-async def played(pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
+async def played(pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return pagination(search(m.TrackPlayed
                              .select(m.TrackPlayed, m.Track, m.Interpret, m.Station)
                              .join(m.Station)
@@ -64,7 +67,7 @@ async def played(pagination: Pagination, search: Search) -> apimodel.PaginatedRe
 
 
 @router.get("/stations")
-async def stations(pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.Station]:
+async def stations(pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.Station]:
     return pagination(search(m.Station.select()))
 
 
@@ -74,7 +77,7 @@ async def station(station_id: int) -> apimodel.Station:
 
 
 @router.get("/stations/{station_id}/played")
-async def station_played(station_id: int, pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
+async def station_played(station_id: int, pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return pagination(search(m.TrackPlayed
                              .select(m.TrackPlayed, m.Track, m.Interpret, m.Station)
                              .where(m.TrackPlayed.station == station_id)
@@ -86,7 +89,7 @@ async def station_played(station_id: int, pagination: Pagination, search: Search
 
 
 @router.get("/interprets")
-async def interprets(pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.Interpret]:
+async def interprets(pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.Interpret]:
     return pagination(search(m.Interpret.select()))
 
 
@@ -96,7 +99,7 @@ async def interpret(interpret_id: int) -> apimodel.Interpret:
 
 
 @router.get("/interprets/{interpret_id}/tracks")
-async def interpret_tracks(interpret_id: int, pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.Track]:
+async def interpret_tracks(interpret_id: int, pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.Track]:
     return pagination(search(m.Track
                              .select(m.Track, m.Interpret)
                              .join(m.Interpret)
@@ -104,7 +107,7 @@ async def interpret_tracks(interpret_id: int, pagination: Pagination, search: Se
 
 
 @router.get("/interprets/{interpret_id}/played")
-async def interpret_played(interpret_id: int, pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
+async def interpret_played(interpret_id: int, pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return pagination(search(m.TrackPlayed
                              .select(m.TrackPlayed, m.Track, m.Interpret, m.Station)
                              .join(m.Track)
@@ -115,7 +118,7 @@ async def interpret_played(interpret_id: int, pagination: Pagination, search: Se
                              .order_by(m.TrackPlayed.start.desc())))
 
 @router.get("/tracks")
-async def tracks(pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.Track]:
+async def tracks(pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.Track]:
     return pagination(search(m.Track.select(m.Track, m.Interpret).join(m.Interpret)))
 
 
@@ -125,7 +128,7 @@ async def track(track_id: int) -> apimodel.Track:
 
 
 @router.get("/tracks/{track_id}/played")
-async def track_played(track_id: int, pagination: Pagination, search: Search) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
+async def track_played(track_id: int, pagination: Pagination, search: SearchSort) -> apimodel.PaginatedResponse[apimodel.TrackPlayed]:
     return pagination(search(m.TrackPlayed
                              .select(m.TrackPlayed, m.Station, m.Track, m.Interpret)
                              .where(m.TrackPlayed.track == track_id)

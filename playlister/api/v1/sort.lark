@@ -1,0 +1,11 @@
+start: item (";" item)*
+item: operator field -> item_operator
+    | field          -> item
+field: WORD
+operator: DESC
+        | ASC
+
+ASC: "+"
+DESC: "-"
+
+%import common.WORD
