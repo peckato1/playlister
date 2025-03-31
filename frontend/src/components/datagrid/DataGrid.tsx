@@ -68,6 +68,7 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
       showFirstButton: true,
       showLastButton: true,
     },
+    manualFiltering: true,
     onColumnFiltersChange: handleColumnFiltersChange,
     muiFilterDateTimePickerProps: {
       ampm: false,
