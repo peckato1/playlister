@@ -1,3 +1,4 @@
+import datetime
 import enum
 import functools
 import typing
@@ -24,7 +25,11 @@ def pw_op(op, pw_field, value):
 
 
 class OperatorType(enum.StrEnum):
-    ILIKE = enum.auto()
+    ILIKE = peewee.OP.ILIKE
+    GT = peewee.OP.GT
+    GEQ = peewee.OP.GTE
+    LT = peewee.OP.LT
+    LEQ = peewee.OP.LTE
 
 
 class SortOperatorType(enum.StrEnum):
@@ -54,6 +59,9 @@ class SearchTransformer(lark.Transformer):
 
     def operator(self, children):
         return OperatorType[children[0].type]
+
+    def datetime(self, children):
+        return datetime.datetime.fromisoformat(children[0].value)
 
 
 class SortTransformer(lark.Transformer):

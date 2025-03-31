@@ -2,11 +2,21 @@ start: item (";" item)*
 empty:
 item: field operator value
 field: WORD
-?value: STR
+?value: datetime
+      | STR
       | empty
 operator: ILIKE
+        | GT
+        | GEQ
+        | LT
+        | LEQ
+datetime: /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
 
 ILIKE: "~="
+GT: ">"
+GEQ: ">="
+LT: "<"
+LEQ: "<="
 STR: /[^;]+/
 
 %import common.WORD
