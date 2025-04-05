@@ -49,7 +49,7 @@ export default function TrackPlayedDataGrid(props: ConcreteDataGridProps<TrackPl
         filterVariant: 'datetime-range',
         header: 'Start',
         Cell: ({ cell }) => <TimeWithRelative time={cell.getValue<dayjs.Dayjs>()} />,
-        enableColumnFilter: false,
+        enableColumnFilter: true,
       },
       {
         id: 'synced',

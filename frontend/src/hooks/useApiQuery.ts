@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { axios, DEFAULT_PAGE_SIZE } from '../config'
+import dayjs from 'dayjs'
 
 interface Pagination {
   pageIndex: number;
@@ -46,12 +47,30 @@ function qPagination(pagination?: Pagination): QueryParams {
   }
 }
 
+function qSearchSingle(filter: ColumnFilter): string | undefined {
+  if (!Array.isArray(filter.value)) {
+    return `${filter.id}~=${filter.value}`
+  }
+
+  const [from, to] = filter.value.map(e => e && dayjs.isDayjs(e) ? e.toISOString() : e)
+
+  if (from && to) {
+    return `${filter.id}>=${from};${filter.id}<=${to}`;
+  } else if (from) {
+    return `${filter.id}>=${from}`;
+  } else if (to) {
+    return `${filter.id}<=${to}`;
+  } else {
+    return undefined
+  }
+}
+
 function qSearch(columnFilters: ColumnFilter[]): QueryParams {
   if (columnFilters.length === 0) {
     return {};
   }
   return {
-    query: columnFilters.map(e => `${e.id}~=${e.value}`).join(";")
+    query: columnFilters.map(e => qSearchSingle(e)).filter(e => e !== undefined).join(";")
   }
 }
 
