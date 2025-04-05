@@ -5,8 +5,8 @@ procs:
   api:
     cmd: ["fastapi", "dev", "playlister/api/__init__.py"]
     env: &env
-      VIRTUAL_ENV: .env
-      PATH: ".env/bin:$PATH"
+      VIRTUAL_ENV: .venv
+      PATH: ".venv/bin:$PATH"
   daemon:
     cmd: ["python", "playlister.py", "--log-level", "trace"]
     env: *env
