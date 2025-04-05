@@ -13,10 +13,15 @@ export interface Paginated<T> {
   data: T[];
 }
 
+export interface QueryParameters<T> {
+  set?: React.Dispatch<React.SetStateAction<T>>;
+  data?: T;
+}
+
 export interface DataGridProps<T> {
   paginatedData: Paginated<T>;
-  setPagination?: React.Dispatch<React.SetStateAction<MRT_PaginationState>>;
-  setColumnFilters?: React.Dispatch<React.SetStateAction<MRT_ColumnFiltersState>>;
+  pagination: QueryParameters<MRT_PaginationState>;
+  columnFilters: QueryParameters<MRT_ColumnFiltersState>;
 }
 
 export interface ConcreteDataGridProps<T> extends DataGridProps<T> {

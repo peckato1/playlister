@@ -30,16 +30,16 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
   }, {} as HiddenColumns)
 
   const handlePaginationChange = (updater: MRT_Updater<MRT_PaginationState>) => {
-    if (props.setPagination) {
-      props.setPagination((prevPagination: MRT_PaginationState) =>
+    if (props.pagination.set) {
+      props.pagination.set((prevPagination: MRT_PaginationState) =>
         typeof updater === 'function' ? updater(prevPagination) : updater
       );
     }
   };
 
   const handleColumnFiltersChange = (updater: MRT_Updater<MRT_ColumnFiltersState>) => {
-    if (props.setColumnFilters) {
-      props.setColumnFilters((prevFilters: MRT_ColumnFiltersState) =>
+    if (props.columnFilters.set) {
+      props.columnFilters.set((prevFilters: MRT_ColumnFiltersState) =>
         typeof updater === 'function' ? updater(prevFilters) : updater
       );
     }
