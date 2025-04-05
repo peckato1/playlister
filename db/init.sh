@@ -69,7 +69,7 @@ psql -v ON_ERROR_STOP=1 --username "${POSTGRES_PLAYLISTER_USER}" --dbname "${POS
         station_id int4 NOT NULL,
         track_id int4 NOT NULL,
         synced_at timestamptz NOT NULL,
-        CONSTRAINT trackplayed_pkey PRIMARY KEY (station_id, start),
+        CONSTRAINT trackplayed_pkey PRIMARY KEY (station_id, start, track_id),
         CONSTRAINT trackplayed_station_id_fkey FOREIGN KEY (station_id) REFERENCES playlister.station(id),
         CONSTRAINT trackplayed_track_id_fkey FOREIGN KEY (track_id) REFERENCES playlister.track(id)
     );
