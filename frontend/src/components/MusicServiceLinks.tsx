@@ -2,7 +2,13 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
-import { SiSpotify, SiApplemusic, SiYoutube } from 'react-icons/si';
+import {
+  SiSpotify,
+  SiApplemusic,
+  SiYoutube,
+  SiGoogle,
+  SiDuckduckgo,
+} from "react-icons/si";
 import { FaDeezer } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 
@@ -41,6 +47,16 @@ const services: Service[] = [
     name: 'Deezer',
     href: 'https://www.deezer.com/search/{query}',
     icon: FaDeezer,
+  },
+  {
+    name: 'Google',
+    href: 'https://www.google.com/search?q={query}',
+    icon: SiGoogle,
+  },
+  {
+    name: 'DuckDuckGo',
+    href: 'https://www.duckduckgo.com/?q={query}',
+    icon: SiDuckduckgo,
   },
 ]
 
