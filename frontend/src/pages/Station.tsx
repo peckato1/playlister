@@ -23,6 +23,7 @@ export default function Page() {
         paginatedData={apiQueryPlayed.query.data}
         pagination={apiQueryPlayed.pagination}
         columnFilters={apiQueryPlayed.columnFilters}
+        sorting={apiQueryPlayed.sorting}
         enableColumnFilters={{
           'station': false,
           'synced': false,

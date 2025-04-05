@@ -12,11 +12,13 @@ import {
   type MRT_Updater,
   MRT_PaginationState,
   type MRT_ColumnFiltersState,
+  type MRT_SortingState,
 } from 'material-react-table'
 
 interface Props<T extends MRT_RowData> extends DataGridProps<T> {
   hiddenColumns?: string[]
   columns: MRT_ColumnDef<T>[]
+  initialSorting?: MRT_SortingState
 }
 
 type HiddenColumns = Record<string, boolean>
@@ -45,6 +47,14 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
     }
   };
 
+  const handleSortChange = (updater: MRT_Updater<MRT_SortingState>) => {
+    if (props.sorting.set) {
+      props.sorting.set((prevSort: MRT_SortingState) =>
+        typeof updater === 'function' ? updater(prevSort) : updater
+      );
+    }
+  };
+
   const table = useMaterialReactTable<T>({
     columns,
     data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
@@ -59,6 +69,7 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
         pageIndex: props.paginatedData.pagination.page - 1,
         pageSize: props.paginatedData.pagination.limit,
       },
+      sorting: props.sorting.data,
     },
     rowCount: props.paginatedData.pagination.total,
     manualPagination: true,
@@ -70,6 +81,8 @@ export default function DataGrid<T extends MRT_RowData>(props: Props<T>) {
     },
     manualFiltering: true,
     onColumnFiltersChange: handleColumnFiltersChange,
+    manualSorting: true,
+    onSortingChange: handleSortChange,
     muiFilterDateTimePickerProps: {
       ampm: false,
       ampmInClock: false,

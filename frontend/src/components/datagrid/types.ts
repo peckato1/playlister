@@ -1,6 +1,7 @@
 import {
   type MRT_PaginationState,
   type MRT_ColumnFiltersState,
+  type MRT_SortingState,
 } from 'material-react-table'
 
 export interface Paginated<T> {
@@ -22,6 +23,7 @@ export interface DataGridProps<T> {
   paginatedData: Paginated<T>;
   pagination: QueryParameters<MRT_PaginationState>;
   columnFilters: QueryParameters<MRT_ColumnFiltersState>;
+  sorting: QueryParameters<MRT_SortingState>;
 }
 
 export interface ConcreteDataGridProps<T> extends DataGridProps<T> {

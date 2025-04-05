@@ -19,6 +19,7 @@ export default function Page() {
         paginatedData={apiQuery.query.data}
         pagination={apiQuery.pagination}
         columnFilters={apiQuery.columnFilters}
+        sorting={apiQuery.sorting}
       />
     </>
   );

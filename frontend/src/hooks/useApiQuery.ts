@@ -12,6 +12,11 @@ interface ColumnFilter {
   value: unknown;
 }
 
+export interface ColumnSort {
+  id: string;
+  desc: boolean;
+}
+
 type QueryParams = Record<string, string|number>;
 
 interface ApiQueryProps {
@@ -50,15 +55,28 @@ function qSearch(columnFilters: ColumnFilter[]): QueryParams {
   }
 }
 
+function qSort(sortingState: ColumnSort[]): QueryParams {
+  if (sortingState.length === 0) {
+    return {}
+  }
+
+  const op = (e: ColumnSort) => e.desc ? "-" : "+";
+  return {
+    sort: encodeURI(sortingState.map(e => `${op(e)}${e.id}`).join(";"))
+  }
+}
+
 interface ConstructQueryParamsProps {
   pagination?: Pagination;
   columnFilters: ColumnFilter[];
+  sortingState: ColumnSort[];
   queryParams?: QueryParams
 }
-function constructQueryParams({ pagination, columnFilters, queryParams }: ConstructQueryParamsProps): QueryParams {
+function constructQueryParams({ pagination, columnFilters, sortingState, queryParams }: ConstructQueryParamsProps): QueryParams {
   return {
     ...qPagination(pagination),
     ...qSearch(columnFilters),
+    ...qSort(sortingState),
     ...(queryParams || {}),
   }
 }
@@ -78,11 +96,13 @@ export function useApiQuery(props: ApiQueryProps) {
     pageSize: DEFAULT_PAGE_SIZE,
   })
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([])
+  const [sortingState, setSortingState] = useState<ColumnSort[]>([]);
 
   const isPaginationEnabled = props.pagination === true
   const queryParams = constructQueryParams({
     pagination: isPaginationEnabled ? pagination : undefined,
     columnFilters,
+    sortingState,
     queryParams: props.params,
   })
 
@@ -101,6 +121,7 @@ export function useApiQuery(props: ApiQueryProps) {
     const nextPageQueryParams = constructQueryParams({
       pagination: nextPage(pagination),
       columnFilters,
+      sortingState,
       queryParams:props.params,
     })
     queryClient.prefetchQuery({
@@ -122,6 +143,10 @@ export function useApiQuery(props: ApiQueryProps) {
     columnFilters: {
       data: columnFilters,
       set: setColumnFilters,
+    },
+    sorting: {
+      data: sortingState,
+      set: setSortingState
     },
   }
 }
