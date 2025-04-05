@@ -13,8 +13,8 @@ export default function InterpretPlayed() {
     <DataGridFactory
       type="trackplayed"
       paginatedData={apiQuery.query.data}
-      setPagination={apiQuery.setPagination}
-      setColumnFilters={apiQuery.setColumnFilters}
+      setPagination={apiQuery.pagination.set}
+      setColumnFilters={apiQuery.columnFilters.set}
       enableColumnFilters={{
         'interpret': false,
       }}

@@ -21,8 +21,8 @@ export default function Page() {
       <DataGridFactory
         type="trackplayed"
         paginatedData={apiQueryPlayed.query.data}
-        setPagination={apiQueryPlayed.setPagination}
-        setColumnFilters={apiQueryPlayed.setColumnFilters}
+        setPagination={apiQueryPlayed.pagination.set}
+        setColumnFilters={apiQueryPlayed.columnFilters.set}
         enableColumnFilters={{
           'station': false,
           'synced': false,

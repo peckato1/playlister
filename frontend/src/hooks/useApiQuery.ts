@@ -115,7 +115,13 @@ export function useApiQuery(props: ApiQueryProps) {
 
   return {
     query: query,
-    setPagination: isPaginationEnabled ? setPagination : undefined,
-    setColumnFilters: setColumnFilters,
+    pagination: {
+      data: isPaginationEnabled ? pagination : undefined,
+      set: isPaginationEnabled ? setPagination : undefined,
+    },
+    columnFilters: {
+      data: columnFilters,
+      set: setColumnFilters,
+    },
   }
 }

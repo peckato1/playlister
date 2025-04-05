@@ -17,8 +17,8 @@ export default function Page() {
       <DataGridFactory
         type="interpret"
         paginatedData={apiQuery.query.data}
-        setPagination={apiQuery.setPagination}
-        setColumnFilters={apiQuery.setColumnFilters}
+        setPagination={apiQuery.pagination.set}
+        setColumnFilters={apiQuery.columnFilters.set}
       />
     </>
   );
