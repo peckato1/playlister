@@ -29,9 +29,7 @@ services:
       - .secrets.env
 
   daemon:
-    build:
-      context: .
-      dockerfile: Dockerfile.daemon
+    image: ghcr.io/peckato1/playlister/daemon:${PLAYLISTER_VERSION}
     restart: always
     networks:
       - backend
@@ -48,9 +46,7 @@ services:
       - .secrets.env
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+    image: ghcr.io/peckato1/playlister/api:${PLAYLISTER_VERSION}
     restart: always
     networks:
       - backend
@@ -69,9 +65,7 @@ services:
       - .secrets_ro.env
 
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    image: ghcr.io/peckato1/playlister/frontend:${PLAYLISTER_VERSION}
     restart: always
     networks:
       - frontend
