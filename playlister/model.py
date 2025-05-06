@@ -69,7 +69,7 @@ class TrackPlayed(BaseModel):
     synced_at = playhouse.postgres_ext.DateTimeTZField()
 
     class Meta:
-        primary_key = peewee.CompositeKey('station', 'start')
+        primary_key = peewee.CompositeKey('station', 'start', 'track')
 
 
 def bind_models(database):
