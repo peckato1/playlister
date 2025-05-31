@@ -14,8 +14,8 @@ def create_app():
 
 db = peewee_async.PooledPostgresqlDatabase(
         os.environ['PLAYLISTER_DB_NAME'],
-        user=os.environ['PLAYLISTER_DB_USER'],
-        password=os.environ['PLAYLISTER_DB_PASSWORD'],
+        user=os.environ['PLAYLISTER_DB_USER_READONLY'],
+        password=os.environ['PLAYLISTER_DB_PASSWORD_READONLY'],
         host=os.environ['PLAYLISTER_DB_HOST'],
         port=os.environ['PLAYLISTER_DB_PORT'])
 playlister.model.bind_models(db)

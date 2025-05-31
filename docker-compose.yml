@@ -1,10 +1,6 @@
 volumes:
   pgdata:
 
-networks:
-  backend:
-  frontend:
-
 services:
   postgres:
     image: postgres:17.2
@@ -13,8 +9,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh
-    networks:
-      - backend
     ports:
       - 5432
     environment:
@@ -28,48 +22,21 @@ services:
     env_file:
       - .secrets.env
 
-  daemon:
-    image: ghcr.io/peckato1/playlister/daemon:${PLAYLISTER_VERSION}
+  playlister:
+    image: ghcr.io/peckato1/playlister:${PLAYLISTER_VERSION}
     restart: always
-    networks:
-      - backend
+    ports:
+      - 8771:80
     depends_on:
       - postgres
     environment:
       PLAYLISTER_DB_HOST: postgres
       PLAYLISTER_DB_PORT: 5432
       PLAYLISTER_DB_USER: playlister
+      PLAYLISTER_DB_USER_READONLY: readonly
       PLAYLISTER_DB_NAME: playlister
       PLAYLISTER_LOG_LEVEL: debug
       # PLAYLISTER_DB_PASSWORD: <secret>
+      # PLAYLISTER_DB_PASSWORD_READONLY: <secret>
     env_file:
       - .secrets.env
-
-  api:
-    image: ghcr.io/peckato1/playlister/api:${PLAYLISTER_VERSION}
-    restart: always
-    networks:
-      - backend
-      - frontend
-    depends_on:
-      - postgres
-    ports:
-      - 8000
-    environment:
-      PLAYLISTER_DB_HOST: postgres
-      PLAYLISTER_DB_PORT: 5432
-      PLAYLISTER_DB_USER: readonly
-      PLAYLISTER_DB_NAME: playlister
-      # PLAYLISTER_DB_PASSWORD: <secret>
-    env_file:
-      - .secrets_ro.env
-
-  nginx:
-    image: ghcr.io/peckato1/playlister/frontend:${PLAYLISTER_VERSION}
-    restart: always
-    networks:
-      - frontend
-    ports:
-      - 8771:80
-    depends_on:
-      - api
